@@ -1,28 +1,30 @@
-'use client';
-
-import { useState } from 'react';
-import dynamic from 'next/dynamic';
-import { useRouter } from 'next/navigation';
-import { Gamepad2, ShieldCheck, Zap, Search, CreditCard, KeyRound, ChevronDown, ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { BannerSlider } from '@/components/banner-slider';
-import { api } from '@/lib/api';
-import { queryKeys } from '@/lib/query-keys';
-import { useQuery } from '@tanstack/react-query';
-
-const FeaturedProductsCarousel = dynamic(() => import('@/components/featured-products-carousel').then((m) => ({ default: m.FeaturedProductsCarousel })), { loading: () => <SectionSkeleton height="min-h-[18rem]" /> });
-const ProductsCarousel = dynamic(() => import('@/components/products-carousel').then((m) => ({ default: m.DealProductsCarousel })), { loading: () => <SectionSkeleton height="min-h-[18rem]" /> });
-const FirstGameCarousel = dynamic(() => import('@/components/products-carousel').then((m) => ({ default: m.FirstGameCarousel })), { loading: () => <SectionSkeleton height="min-h-[18rem]" /> });
-const PurchaseMarquee = dynamic(() => import('@/components/purchase-marquee').then((m) => ({ default: m.PurchaseMarquee })), { loading: () => <SectionSkeleton height="min-h-[4rem]" /> });
-const GamesList = dynamic(() => import('@/components/games-list').then((m) => ({ default: m.GamesList })), { loading: () => <SectionSkeleton height="min-h-[20rem]" /> });
-
-function SectionSkeleton({ height }: { height: string }) {
-  return <div className={`w-full ${height} bg-muted/30 animate-pulse rounded-lg`} aria-hidden />;
-}
+import {
+  Gamepad2,
+  ShieldCheck,
+  Zap,
+  Search,
+  CreditCard,
+  KeyRound,
+  ArrowRight,
+  Star,
+} from 'lucide-react';
+import {
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  BannerSlider,
+  HomeHero,
+  HomeFaq,
+  FeaturedProductsCarousel,
+  DealProductsCarousel,
+  FirstGameCarousel,
+  PurchaseMarquee,
+  GamesList,
+  getGamesServer,
+} from '@shop-ban-nick/shared-web';
 
 const HOW_IT_WORKS = [
   { icon: Search, title: 'Chọn game', desc: 'Vào danh sách game, chọn game bạn muốn mua acc.' },
@@ -39,22 +41,10 @@ const FAQ_ITEMS = [
   { q: 'Hỗ trợ 24/7?', a: 'Bạn có thể nhắn Zalo hoặc Facebook để được hỗ trợ nhanh. Xem số liên hệ ở footer hoặc nút Zalo góc phải màn hình.' },
 ];
 
-export default function HomePage() {
-  const router = useRouter();
-  const [searchQ, setSearchQ] = useState('');
-  const { data: games = [] } = useQuery({
-    queryKey: queryKeys.games.all,
-    queryFn: () => api.getGames(),
-    staleTime: 60_000,
-  });
-  const totalAcc = (games as { _count?: { accounts: number } }[]).reduce((s, g) => s + (g._count?.accounts ?? 0), 0);
+export default async function HomePage() {
+  const games = await getGamesServer();
+  const totalAcc = games.reduce((s, g) => s + (g._count?.accounts ?? 0), 0);
   const accLabel = totalAcc > 0 ? `${totalAcc.toLocaleString('vi-VN')}+ acc đang bán` : 'Hàng ngàn acc đang bán';
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = searchQ.trim();
-    router.push(q ? `/games?q=${encodeURIComponent(q)}` : '/games');
-  };
 
   return (
     <div>
@@ -62,38 +52,7 @@ export default function HomePage() {
         <BannerSlider />
       </section>
 
-      <section className="py-8 text-center container-narrow" aria-labelledby="hero-heading">
-        <Badge variant="secondary" className="mb-3">{accLabel}</Badge>
-        <h1 id="hero-heading" className="text-fluid-hero font-bold tracking-tight mb-3">
-          Mua Acc Game <span className="text-primary">Giá Tốt Nhất</span>
-        </h1>
-        <p className="text-muted-foreground max-w-[90vw] sm:max-w-xl mx-auto mb-1">
-          Giao acc trong 5 phút – Bảo hành 24h.
-        </p>
-        <p className="text-muted-foreground max-w-[90vw] sm:max-w-xl mx-auto text-sm">
-          {accLabel} · Giao dịch tức thì.
-        </p>
-        <form onSubmit={handleSearch} className="mt-6 max-w-md mx-auto flex gap-2">
-          <div className="relative flex-1">
-            <Input
-              type="search"
-              placeholder="Tìm game theo tên..."
-              className="w-full"
-              value={searchQ}
-              onChange={(e) => setSearchQ(e.target.value)}
-              aria-label="Tìm game"
-            />
-          </div>
-          <Button type="submit"><Search className="h-4 w-4 shrink-0" /> Tìm</Button>
-        </form>
-        <div className="mt-4">
-          <Link href="/games">
-            <Button size="lg">
-              Xem acc ngay <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
-      </section>
+      <HomeHero accLabel={accLabel} />
 
       <section className="py-16 container-narrow" aria-labelledby="features-heading">
         <h2 id="features-heading" className="sr-only">
@@ -148,7 +107,7 @@ export default function HomePage() {
       </section>
 
       <FeaturedProductsCarousel sectionVariant="white" />
-      <ProductsCarousel sectionVariant="slate" />
+      <DealProductsCarousel sectionVariant="slate" />
       <FirstGameCarousel sectionVariant="white" />
 
       <section aria-label="Giao dịch gần đây">
@@ -188,7 +147,7 @@ export default function HomePage() {
           <h2 id="faq-heading" className="text-fluid-section font-bold text-center mb-8">
             Câu hỏi thường gặp
           </h2>
-          <FAQAccordion items={FAQ_ITEMS} />
+          <HomeFaq items={FAQ_ITEMS} />
         </div>
       </section>
 
@@ -205,40 +164,6 @@ export default function HomePage() {
           </Button>
         </Link>
       </section>
-    </div>
-  );
-}
-
-function FAQAccordion({ items }: { items: { q: string; a: string }[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-  return (
-    <div className="max-w-2xl mx-auto space-y-2">
-      {items.map((item, i) => {
-        const isOpen = openIndex === i;
-        return (
-        <div key={i} className="border rounded-lg bg-background overflow-hidden">
-          <button
-            type="button"
-            onClick={() => setOpenIndex(isOpen ? null : i)}
-            aria-expanded={isOpen}
-            aria-controls={`faq-answer-${i}`}
-            id={`faq-question-${i}`}
-            className="w-full flex items-center justify-between gap-4 px-4 py-3 text-left font-medium hover:bg-muted/50 transition-colors"
-          >
-            {item.q}
-            <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${openIndex === i ? 'rotate-180' : ''}`} />
-          </button>
-          <div
-            id={`faq-answer-${i}`}
-            role="region"
-            aria-labelledby={`faq-question-${i}`}
-            className={`border-t overflow-hidden transition-[height] duration-200 ${isOpen ? 'visible' : 'hidden'}`}
-          >
-            <p className="px-4 py-3 text-sm text-muted-foreground">{item.a}</p>
-          </div>
-        </div>
-        );
-      })}
     </div>
   );
 }

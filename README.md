@@ -81,31 +81,22 @@ npm run dev:web
 
 ## Deploy (Vercel – frontend only)
 
+Build chạy từ **repo root** (cấu hình trong `vercel.json` ở root).
+
 ### CLI (từ repo root)
 
-Cài Vercel CLI (một lần): `npm i -g vercel` hoặc dùng `npx vercel`.
-
-**Lần đầu – link project:**
-
 ```powershell
-npm run vercel:link
-# hoặc: npx vercel link --cwd apps/web
-# Chọn scope → Create/Link project (Root Directory sẽ dùng apps/web qua vercel.json)
+npm run vercel:link    # lần đầu: link project
+npm run vercel:deploy   # preview
+npm run vercel:prod    # production
 ```
 
-**Deploy preview / production:**
-
-```powershell
-npm run vercel:deploy        # preview
-npm run vercel:prod         # production
-```
-
-**Env:** Set trên dashboard (Project → Settings → Environment Variables) hoặc `vercel env add` (chạy trong context `apps/web`).
+**Trên Vercel Dashboard:** Root Directory = `.` (để trống hoặc repo root). Env: Project → Settings → Environment Variables.
 
 ### Dashboard
 
 1. [Import repo](https://vercel.com/new) → chọn repo.
-2. **Root Directory**: `apps/web`.
-3. **Build / Install**: dùng mặc định (đã set trong `apps/web/vercel.json`).
-4. **Environment Variables**: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_APP_URL`, (tuỳ chọn) `NEXT_PUBLIC_FEATURED_GAME_SLUG`, `NEXT_PUBLIC_ZALO_PHONE`, …
-5. API (NestJS) host riêng (Railway, Render, VPS, …).
+2. **Root Directory**: để trống (repo root).
+3. Build / Install lấy từ `vercel.json` (root).
+4. **Environment Variables**: `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_APP_URL`, …
+5. API (NestJS) host riêng.

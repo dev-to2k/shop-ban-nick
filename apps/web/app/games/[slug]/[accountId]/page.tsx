@@ -1,6 +1,6 @@
-import AccountDetailClient from './account-detail-client';
+import { AccountDetailPage } from '@shop-ban-nick/features-catalog';
 
-export default async function AccountDetailPage({ params }: { params: Promise<{ slug: string; accountId: string }> }) {
+export default async function Page({ params }: { params: Promise<{ slug: string; accountId: string }> }) {
   const { slug, accountId } = await params;
-  return <AccountDetailClient slug={slug} accountId={accountId} />;
+  return <AccountDetailPage slug={slug} accountId={accountId} />;
 }

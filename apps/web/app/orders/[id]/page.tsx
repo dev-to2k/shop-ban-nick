@@ -1,6 +1,6 @@
-import OrderDetailClient from './order-detail-client';
+import { OrderDetailPage } from '@shop-ban-nick/features-orders';
 
-export default async function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <OrderDetailClient id={id} />;
+  return <OrderDetailPage id={id} />;
 }

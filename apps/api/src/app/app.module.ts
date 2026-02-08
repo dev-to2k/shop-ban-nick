@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { AuthModule } from '../auth/auth.module';
-import { GameModule } from '../game/game.module';
-import { AccountModule } from '../account/account.module';
-import { OrderModule } from '../order/order.module';
-import { UploadModule } from '../upload/upload.module';
-import { WalletModule } from '../wallet/wallet.module';
-import { PrismaModule } from '../prisma/prisma.module';
-import { BannerModule } from '../banner/banner.module';
+import { PrismaModule } from '@shop-ban-nick/nest-prisma';
+import { AuthModule } from '@shop-ban-nick/api-auth';
+import { GameModule } from '@shop-ban-nick/api-game';
+import { AccountModule } from '@shop-ban-nick/api-account';
+import { OrderModule } from '@shop-ban-nick/api-order';
+import { WalletModule } from '@shop-ban-nick/api-wallet';
+import { BannerModule } from '@shop-ban-nick/api-banner';
+import { UploadModule } from '@shop-ban-nick/api-upload';
 
 @Module({
   imports: [

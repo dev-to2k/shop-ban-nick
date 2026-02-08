@@ -5,7 +5,7 @@ const attributeTypeEnum = z.enum(['TEXT', 'NUMBER', 'SELECT']);
 const gameAttributeSchema = z.object({
   name: z.string().min(1, 'Tên thuộc tính là bắt buộc'),
   type: attributeTypeEnum,
-  options: z.string().optional(),
+  options: z.array(z.string()).optional(),
 });
 
 export const createGameSchema = z.object({

@@ -1,3 +1,5 @@
+export * from './lib/enums.schema';
+export * from './lib/entities.schema';
 export * from './lib/auth.schema';
 export * from './lib/game.schema';
 export * from './lib/account.schema';

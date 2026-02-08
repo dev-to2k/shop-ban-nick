@@ -1,11 +1,6 @@
-import { AdminAccountsProvider } from '@/lib/admin-accounts-context';
-import AdminGameAccountsClient from './accounts-client';
+import { AdminGameAccountsPage } from '@shop-ban-nick/features-admin';
 
-export default async function AdminGameAccountsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return (
-    <AdminAccountsProvider gameId={id}>
-      <AdminGameAccountsClient />
-    </AdminAccountsProvider>
-  );
+  return <AdminGameAccountsPage gameId={id} />;
 }

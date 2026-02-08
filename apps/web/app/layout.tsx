@@ -4,17 +4,20 @@ import { GeistSans } from 'geist/font/sans';
 import { GeistMono } from 'geist/font/mono';
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
-import { ThemeProvider } from '@/components/theme-provider';
-import { QueryProvider } from '@/lib/query-provider';
-import { ThemeClassApplier } from '@/components/theme-class-applier';
-import { BreadcrumbProvider } from '@/lib/breadcrumb-context';
-import { CartProvider } from '@/lib/cart-context';
-import { Header } from '@/components/header';
-import { StickyStack } from '@/components/sticky-stack';
-import { GlobalBreadcrumb } from '@/components/global-breadcrumb';
-import { Footer } from '@/components/footer';
-import { ScrollToTop } from '@/components/scroll-to-top';
-import { ZaloFloat } from '@/components/zalo-float';
+import {
+  ThemeProvider,
+  QueryProvider,
+  BreadcrumbProvider,
+  CartProvider,
+  ThemeClassApplier,
+  GlobalMutationLoading,
+  Header,
+  StickyStack,
+  GlobalBreadcrumb,
+  Footer,
+  ScrollToTop,
+  ZaloFloat,
+} from '@shop-ban-nick/shared-web';
 
 export const metadata: Metadata = {
   title: 'ShopAcc - Mua bán acc game uy tín',
@@ -65,7 +68,7 @@ export default function RootLayout({
           color="hsl(var(--primary))"
         />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <QueryProvider>
+          <QueryProvider extra={<GlobalMutationLoading />}>
             <ThemeClassApplier>
               <CartProvider>
                 <BreadcrumbProvider>
