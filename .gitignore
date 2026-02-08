@@ -50,3 +50,7 @@ uploads/
 
 # Prisma
 libs/prisma-client/prisma/migrations/
+
+# Logs & test output
+debug.log
+test-results/
