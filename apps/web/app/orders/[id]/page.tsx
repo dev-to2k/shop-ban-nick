@@ -1,4 +1,4 @@
-import { OrderDetailPage } from '@shop-ban-nick/features-orders';
+import { OrderDetailPage } from '@shop-ban-nick/feature-order';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

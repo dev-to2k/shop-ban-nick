@@ -5,7 +5,7 @@ import { PrismaModule } from '@shop-ban-nick/nest-prisma';
 import { AuthModule } from '@shop-ban-nick/feature-auth/api';
 import { GameModule } from '@shop-ban-nick/api-game';
 import { AccountModule } from '@shop-ban-nick/api-account';
-import { OrderModule } from '@shop-ban-nick/api-order';
+import { OrderModule } from '@shop-ban-nick/feature-order/api';
 import { WalletModule } from '@shop-ban-nick/api-wallet';
 import { BannerModule } from '@shop-ban-nick/api-banner';
 import { UploadModule } from '@shop-ban-nick/api-upload';
