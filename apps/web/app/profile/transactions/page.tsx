@@ -1,4 +1,4 @@
-import { ProfileTransactionsPage } from '@shop-ban-nick/features-profile';
+import { ProfileTransactionsPage } from '@shop-ban-nick/feature-profile';
 
 export default function Page() {
   return <ProfileTransactionsPage />;

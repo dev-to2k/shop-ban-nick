@@ -12,7 +12,6 @@ import {
   getAssetUrl,
   Input,
   useAppStore,
-  useBreadcrumb,
 } from '@shop-ban-nick/shared-web';
 import { useMutation } from '@tanstack/react-query';
 import { Camera, History, Mail, Package, Phone, Shield, User, Wallet } from 'lucide-react';
@@ -26,12 +25,6 @@ export function ProfilePage() {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { auth, setAuth } = useAppStore();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Tài khoản' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   useEffect(() => {
     if (!auth.user) router.replace('/login');

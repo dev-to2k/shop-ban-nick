@@ -1,4 +1,4 @@
-import { AdminGameAccountsPage } from '@shop-ban-nick/features-admin';
+import { AdminGameAccountsPage } from '@shop-ban-nick/feature-account';
 
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

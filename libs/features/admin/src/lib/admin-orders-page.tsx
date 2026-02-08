@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { ShoppingCart, CheckCircle, XCircle, ChevronLeft, ChevronRight, Filter } from 'lucide-react';
 import { OrderStatus } from '@shop-ban-nick/shared-types';
 import { Button, Card, CardContent, Badge, Skeleton } from '@shop-ban-nick/shared-web';
-import { api, useBreadcrumb, queryKeys } from '@shop-ban-nick/shared-web';
+import { api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 
 const statusMap: Record<string, { label: string; variant: 'warning' | 'default' | 'success' | 'destructive' | 'secondary' }> = {
@@ -19,15 +19,9 @@ const statusMap: Record<string, { label: string; variant: 'warning' | 'default' 
 
 export function AdminOrdersPage() {
   const queryClient = useQueryClient();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const [page, setPage] = useState(1);
   const [filter, setFilter] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Admin', href: '/admin' }, { label: 'Đơn hàng' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const params: Record<string, string> = { page: String(page), limit: '20' };
   if (filter) params.status = filter;

@@ -1,22 +1,13 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Badge } from '../ui/badge';
 import { Skeleton } from '../ui/skeleton';
-import { useProduct, useBreadcrumb } from '../../contexts';
+import { useProduct } from '../../contexts';
 import { useGame } from '../../hooks';
 
 export function GameHeader() {
   const { slug } = useProduct();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const { data: game, isLoading } = useGame(slug);
-
-  useEffect(() => {
-    if (game) {
-      setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Danh sách game', href: '/games' }, { label: game.name }]);
-      return () => setBreadcrumb([]);
-    }
-  }, [game, setBreadcrumb]);
 
   if (isLoading || !game) {
     return (

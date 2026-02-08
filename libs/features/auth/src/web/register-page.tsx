@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -9,7 +8,7 @@ import { useMutation } from '@tanstack/react-query';
 import { z } from 'zod';
 import { UserPlus } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription, Form, FormInput, FormSubmitError } from '@shop-ban-nick/shared-web';
-import { useAppStore, useBreadcrumb, api, ApiError } from '@shop-ban-nick/shared-web';
+import { useAppStore, api, ApiError } from '@shop-ban-nick/shared-web';
 
 const registerSchema = z
   .object({
@@ -28,12 +27,6 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 export function RegisterPage() {
   const router = useRouter();
   const { setAuth } = useAppStore();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Đăng ký' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),

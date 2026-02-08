@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -19,7 +18,7 @@ import {
   FormInput,
   FormSubmitError,
 } from '@shop-ban-nick/shared-web';
-import { useAppStore, useBreadcrumb, api } from '@shop-ban-nick/shared-web';
+import { useAppStore, api } from '@shop-ban-nick/shared-web';
 
 const loginSchema = z.object({
   email: z.string().min(1, 'Email là bắt buộc').email('Email không hợp lệ'),
@@ -30,12 +29,6 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export function LoginPage() {
   const router = useRouter();
   const { setAuth } = useAppStore();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Đăng nhập' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),

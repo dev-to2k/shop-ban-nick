@@ -1,4 +1,4 @@
-import { AccountDetailPage } from '@shop-ban-nick/features-catalog';
+import { AccountDetailPage } from '@shop-ban-nick/feature-account';
 
 export default async function Page({ params }: { params: Promise<{ slug: string; accountId: string }> }) {
   const { slug, accountId } = await params;

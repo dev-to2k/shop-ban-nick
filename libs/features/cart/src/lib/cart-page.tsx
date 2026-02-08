@@ -2,26 +2,20 @@
 
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { AUTO_ANIMATE_CONFIG } from '@shop-ban-nick/shared-web';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingBag, Gamepad2, Trash2, CreditCard } from 'lucide-react';
 import { Button, Card, CardContent, Separator } from '@shop-ban-nick/shared-web';
-import { ProductCard, useCart, useBreadcrumb } from '@shop-ban-nick/shared-web';
+import { ProductCard, useCart } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 import { CartRemoveItemDialog } from './cart-remove-item-dialog';
 import { CartClearDialog } from './cart-clear-dialog';
 
 export function CartPage() {
   const { cart, removeFromCart, clearCart } = useCart();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const [cartListRef, setAutoAnimateEnabled] = useAutoAnimate<HTMLDivElement>(AUTO_ANIMATE_CONFIG);
   const [removeId, setRemoveId] = useState<string | null>(null);
   const [clearOpen, setClearOpen] = useState(false);
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Giỏ hàng' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const totalItems = cart.reduce((s, i) => s + (i.quantity ?? 1), 0);
   const total = cart.reduce((sum, item) => {

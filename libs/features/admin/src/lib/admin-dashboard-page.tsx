@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Package, Gamepad2, ShoppingCart, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, Skeleton } from '@shop-ban-nick/shared-web';
-import { api, queryKeys, useBreadcrumb } from '@shop-ban-nick/shared-web';
+import { api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 
 const cardsConfig = [
@@ -16,12 +15,6 @@ const cardsConfig = [
 ];
 
 export function AdminDashboardPage() {
-  const { setItems: setBreadcrumb } = useBreadcrumb();
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Admin' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
-
   const { data: stats, isLoading } = useQuery({
     queryKey: queryKeys.admin.stats,
     queryFn: () => api.admin.getStats(),

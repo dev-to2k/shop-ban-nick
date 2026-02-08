@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, History, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription } from '@shop-ban-nick/shared-web';
-import { useAppStore, useBreadcrumb, api, queryKeys } from '@shop-ban-nick/shared-web';
+import { useAppStore, api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 import type { IWalletTransaction } from '@shop-ban-nick/shared-types';
 
@@ -21,13 +21,7 @@ const LIMIT = 20;
 export function ProfileTransactionsPage() {
   const router = useRouter();
   const { auth } = useAppStore();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Tài khoản', href: '/profile' }, { label: 'Lịch sử giao dịch' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   useEffect(() => {
     if (!auth.user) router.replace('/login');

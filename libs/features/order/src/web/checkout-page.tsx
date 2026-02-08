@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -16,7 +15,7 @@ const createOrderSchema = z.object({
 });
 type CreateOrderFormValues = z.infer<typeof createOrderSchema>;
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription, Separator, Form, FormInput, FormSubmitError, Input, Label } from '@shop-ban-nick/shared-web';
-import { useAppStore, useCart, useBreadcrumb, api, queryKeys } from '@shop-ban-nick/shared-web';
+import { useAppStore, useCart, api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 import { useCurrencyInput, type ApiError } from '@shop-ban-nick/shared-web';
 
@@ -27,13 +26,7 @@ export function CheckoutPage() {
   const queryClient = useQueryClient();
   const { auth } = useAppStore();
   const { cart, clearCart } = useCart();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const depositCurrency = useCurrencyInput({ max: 999_999_999, initialValue: 0 });
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Giỏ hàng', href: '/cart' }, { label: 'Thanh toán' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const totalItems = cart.reduce((s, i) => s + (i.quantity ?? 1), 0);
   const total = cart.reduce((sum, item) => {

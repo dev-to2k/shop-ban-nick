@@ -4,10 +4,9 @@ import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { AUTO_ANIMATE_CONFIG } from '@shop-ban-nick/shared-web';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { useEffect } from 'react';
 import { Package, LogIn, ShoppingCart } from 'lucide-react';
 import { Button, Card, CardContent, Badge, Skeleton } from '@shop-ban-nick/shared-web';
-import { api, useBreadcrumb, queryKeys, useAppStore } from '@shop-ban-nick/shared-web';
+import { api, queryKeys, useAppStore } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 
 const statusMap: Record<string, { label: string; variant: 'warning' | 'default' | 'success' | 'destructive' | 'secondary' }> = {
@@ -20,13 +19,7 @@ const statusMap: Record<string, { label: string; variant: 'warning' | 'default' 
 
 export function OrdersPage() {
   const { auth } = useAppStore();
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const [ordersListRef] = useAutoAnimate<HTMLDivElement>(AUTO_ANIMATE_CONFIG);
-
-  useEffect(() => {
-    setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Đơn hàng' }]);
-    return () => setBreadcrumb([]);
-  }, [setBreadcrumb]);
 
   const { data, isLoading } = useQuery({
     queryKey: queryKeys.orders.my(),

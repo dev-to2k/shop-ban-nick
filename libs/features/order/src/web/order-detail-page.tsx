@@ -1,11 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Separator, Skeleton } from '@shop-ban-nick/shared-web';
-import { api, queryKeys, useBreadcrumb } from '@shop-ban-nick/shared-web';
+import { api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 
 const statusMap: Record<string, { label: string; variant: 'warning' | 'default' | 'success' | 'destructive' | 'secondary' }> = {
@@ -17,18 +16,10 @@ const statusMap: Record<string, { label: string; variant: 'warning' | 'default' 
 };
 
 export function OrderDetailPage({ id }: { id: string }) {
-  const { setItems: setBreadcrumb } = useBreadcrumb();
   const { data: order, isLoading } = useQuery({
     queryKey: queryKeys.orders.byId(id),
     queryFn: () => api.getOrderById(id),
   });
-
-  useEffect(() => {
-    if (order) {
-      setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Đơn hàng', href: '/orders' }, { label: `#${order.id.slice(0, 8)}` }]);
-      return () => setBreadcrumb([]);
-    }
-  }, [order, setBreadcrumb]);
 
   if (isLoading) return <div className="container-narrow py-6 sm:py-8"><Skeleton className="h-64 w-full" /></div>;
   if (!order) return <div className="container-narrow py-16 sm:py-20 text-center text-muted-foreground">Đơn hàng không tồn tại</div>;

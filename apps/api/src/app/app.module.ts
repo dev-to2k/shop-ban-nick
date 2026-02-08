@@ -3,12 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from '@shop-ban-nick/nest-prisma';
 import { AuthModule } from '@shop-ban-nick/feature-auth/api';
-import { GameModule } from '@shop-ban-nick/api-game';
-import { AccountModule } from '@shop-ban-nick/api-account';
+import { GameModule } from '@shop-ban-nick/feature-game/api';
+import { AccountModule } from '@shop-ban-nick/feature-account/api';
 import { OrderModule } from '@shop-ban-nick/feature-order/api';
-import { WalletModule } from '@shop-ban-nick/api-wallet';
-import { BannerModule } from '@shop-ban-nick/api-banner';
-import { UploadModule } from '@shop-ban-nick/api-upload';
+import { WalletModule } from '@shop-ban-nick/feature-wallet/api';
+import { BannerModule } from '@shop-ban-nick/feature-banner/api';
+import { UploadModule } from '@shop-ban-nick/feature-upload/api';
 
 @Module({
   imports: [

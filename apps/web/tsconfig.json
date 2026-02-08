@@ -22,7 +22,7 @@
       "@/*": ["./*"],
       "@shop-ban-nick/shared-types": ["../../libs/shared/types/src/index.ts"],
       "@shop-ban-nick/shared-utils": ["../../libs/shared/utils/src/index.ts"],
-      "@shop-ban-nick/shared-schemas": ["../../libs/shared/schemas/src/index.ts"],"@shop-ban-nick/shared-web":["../../libs/shared/web/src/index.ts"],"@shop-ban-nick/feature-auth":["../../libs/features/auth/src/web/index.ts"],"@shop-ban-nick/features-catalog":["../../libs/features/catalog/src/index.ts"],"@shop-ban-nick/features-cart":["../../libs/features/cart/src/index.ts"],"@shop-ban-nick/feature-order":["../../libs/features/order/src/web/index.ts"],"@shop-ban-nick/features-admin":["../../libs/features/admin/src/index.ts"],"@shop-ban-nick/features-profile":["../../libs/features/profile/src/index.ts"]
+      "@shop-ban-nick/shared-schemas": ["../../libs/shared/schemas/src/index.ts"],"@shop-ban-nick/shared-web":["../../libs/shared/web/src/index.ts"],"@shop-ban-nick/feature-auth":["../../libs/features/auth/src/web/index.ts"],"@shop-ban-nick/feature-game":["../../libs/features/game/src/web/index.ts"],"@shop-ban-nick/feature-account":["../../libs/features/account/src/web/index.ts"],"@shop-ban-nick/feature-cart":["../../libs/features/cart/src/web/index.ts"],"@shop-ban-nick/feature-order":["../../libs/features/order/src/web/index.ts"],"@shop-ban-nick/feature-admin":["../../libs/features/admin/src/web/index.ts"],"@shop-ban-nick/feature-profile":["../../libs/features/profile/src/web/index.ts"],"@shop-ban-nick/feature-wallet":["../../libs/features/wallet/src/web/index.ts"]
     }
   },
   "include": [
