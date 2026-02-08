@@ -13,10 +13,11 @@ interface FormInputProps {
   className?: string;
   valueAsNumber?: boolean;
   required?: boolean;
+  'data-testid'?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export function FormInput({ name, label, placeholder, type, className, valueAsNumber, required, onChange }: FormInputProps) {
+export function FormInput({ name, label, placeholder, type, className, valueAsNumber, required, 'data-testid': dataTestId, onChange }: FormInputProps) {
   const { control } = useFormContext();
 
   return (
@@ -31,6 +32,7 @@ export function FormInput({ name, label, placeholder, type, className, valueAsNu
               type={type}
               placeholder={placeholder}
               className={cn(fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+              data-testid={dataTestId}
               {...field}
               onChange={(e) => {
                 valueAsNumber ? field.onChange(e.target.valueAsNumber ?? 0) : field.onChange(e);

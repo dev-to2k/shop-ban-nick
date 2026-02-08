@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState, type ReactNode } from 'react';
+import { GlobalMutationLoading } from '@/components/global-mutation-loading';
 
 export function QueryProvider({ children }: { children: ReactNode }) {
   const [client] = useState(
@@ -17,6 +18,7 @@ export function QueryProvider({ children }: { children: ReactNode }) {
   return (
     <QueryClientProvider client={client}>
       {children}
+      <GlobalMutationLoading />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );

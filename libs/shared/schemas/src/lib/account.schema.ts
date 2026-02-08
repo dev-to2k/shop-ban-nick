@@ -7,7 +7,7 @@ export const createAccountSchema = z.object({
   description: z.string().optional(),
   price: z.number().min(1, 'Giá phải lớn hơn 0'),
   images: z.array(z.string()).optional(),
-  attributes: z.record(z.union([z.string(), z.number()])).optional(),
+  attributes: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
   loginInfo: z.string().optional(),
 });
 

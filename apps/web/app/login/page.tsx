@@ -45,7 +45,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 flex flex-col items-center">
+    <div className="container-narrow py-12 sm:py-16 flex flex-col items-center">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl">Đăng nhập</CardTitle>

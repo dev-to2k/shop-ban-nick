@@ -1,5 +1,7 @@
 'use client';
 
+import { useAutoAnimate } from '@formkit/auto-animate/react';
+import { AUTO_ANIMATE_CONFIG } from '@/lib/auto-animate-config';
 import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
@@ -25,6 +27,7 @@ const statusMap: Record<string, { label: string; variant: any }> = {
 export default function OrdersPage() {
   const { auth } = useAppStore();
   const { setItems: setBreadcrumb } = useBreadcrumb();
+  const [ordersListRef] = useAutoAnimate<HTMLDivElement>(AUTO_ANIMATE_CONFIG);
 
   useEffect(() => {
     setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Đơn hàng' }]);
@@ -41,27 +44,67 @@ export default function OrdersPage() {
 
   if (!auth.token) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-muted-foreground mb-4">Vui lòng đăng nhập để xem đơn hàng</p>
-        <Link href="/login"><Button><LogIn className="h-4 w-4 mr-2" />Đăng nhập</Button></Link>
+      <div className="container-narrow py-12 sm:py-16">
+        <Card className="max-w-lg mx-auto bg-card/50">
+          <CardContent className="pt-10 pb-10 px-6 sm:px-10 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
+              <Package className="h-10 w-10" aria-hidden />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Đăng nhập để xem đơn hàng</h2>
+            <p className="text-muted-foreground text-sm sm:text-base mb-6 max-w-sm mx-auto">
+              Đăng nhập tài khoản để xem lịch sử đơn hàng và theo dõi trạng thái giao dịch.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/login">
+                <Button className="w-full sm:w-auto" size="lg">
+                  <LogIn className="h-4 w-4 mr-2" />Đăng nhập
+                </Button>
+              </Link>
+              <Link href="/">
+                <Button variant="outline" className="w-full sm:w-auto" size="lg">
+                  Về trang chủ
+                </Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6">Đơn hàng của tôi</h1>
-
+    <div className="container-narrow py-6 sm:py-8">
       {isLoading ? (
         <div className="space-y-3">{Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-24 w-full" />)}</div>
       ) : orders.length === 0 ? (
-        <div className="text-center py-20">
-          <Package className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-          <p className="text-muted-foreground mb-4">Bạn chưa có đơn hàng nào</p>
-          <Link href="/games"><Button><ShoppingCart className="h-4 w-4 mr-2" />Mua acc ngay</Button></Link>
-        </div>
+        <Card className="max-w-lg mx-auto bg-card/50">
+          <CardContent className="pt-10 pb-10 px-6 sm:px-10 text-center">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary/10 text-primary mb-6">
+              <Package className="h-10 w-10" aria-hidden />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-foreground mb-2">Bạn chưa có đơn hàng nào</h2>
+            <p className="text-muted-foreground text-sm sm:text-base mb-6 max-w-sm mx-auto">
+              Khám phá acc game chất lượng, đặt hàng và theo dõi đơn tại đây.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/games">
+                <Button className="w-full sm:w-auto" size="lg">
+                  <ShoppingCart className="h-4 w-4 mr-2" />Mua acc ngay
+                </Button>
+              </Link>
+              <Link href="/">
+                <Button variant="outline" className="w-full sm:w-auto" size="lg">
+                  Về trang chủ
+                </Button>
+              </Link>
+            </div>
+            <p className="text-xs text-muted-foreground mt-6 pt-6 border-t border-border">
+              Giao dịch an toàn · Hỗ trợ 24/7
+            </p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="space-y-3">
+        <div ref={ordersListRef} data-auto-animate className="space-y-3">
           {orders.map((order: any) => {
             const status = statusMap[order.status] || { label: order.status, variant: 'secondary' };
             return (
@@ -77,7 +120,7 @@ export default function OrdersPage() {
                         {order.accounts?.length || 0} acc &middot; {new Date(order.createdAt).toLocaleDateString('vi-VN')}
                       </p>
                     </div>
-                    <span className="font-bold text-primary">{formatPrice(Number(order.totalAmount))}</span>
+                    <span className="font-bold text-primary tabular-nums">{formatPrice(Number(order.totalAmount))}</span>
                   </CardContent>
                 </Card>
               </Link>

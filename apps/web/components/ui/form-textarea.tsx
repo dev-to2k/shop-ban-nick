@@ -26,7 +26,7 @@ export function FormTextarea({ name, label, placeholder, className, required }: 
           <FormControl>
             <Textarea
               placeholder={placeholder}
-              className={cn('min-h-[80px]', fieldState.error && 'border-destructive focus-visible:ring-destructive')}
+              className={cn('min-h-[5rem]', fieldState.error && 'border-destructive focus-visible:ring-destructive')}
               {...field}
             />
           </FormControl>

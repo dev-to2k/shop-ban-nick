@@ -6,7 +6,7 @@ import { Prisma } from '@prisma/client';
 export class OrderService {
   constructor(private prisma: PrismaService) {}
 
-  async create(userId: string, dto: { accountIds: string[]; paymentMethod: 'BANK_TRANSFER' | 'MOMO'; note?: string }) {
+  async create(userId: string, dto: { accountIds: string[]; paymentMethod: 'WALLET'; note?: string }) {
     const accounts = await this.prisma.gameAccount.findMany({
       where: { id: { in: dto.accountIds }, status: 'AVAILABLE' },
     });
@@ -16,13 +16,22 @@ export class OrderService {
     }
 
     const totalAmount = accounts.reduce((sum, a) => sum.add(a.price), new Prisma.Decimal(0));
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { walletBalance: true },
+    });
+    const balance = user ? Number(user.walletBalance) : 0;
+    const total = Number(totalAmount);
+    if (balance < total) {
+      throw new BadRequestException({ code: 'INSUFFICIENT_BALANCE', required: total, current: balance });
+    }
 
     return this.prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
           userId,
           totalAmount,
-          paymentMethod: dto.paymentMethod,
+          paymentMethod: 'WALLET',
           note: dto.note,
         },
         include: { accounts: true },
@@ -31,6 +40,20 @@ export class OrderService {
       await tx.gameAccount.updateMany({
         where: { id: { in: dto.accountIds } },
         data: { status: 'RESERVED', orderId: order.id },
+      });
+
+      await tx.user.update({
+        where: { id: userId },
+        data: { walletBalance: { decrement: totalAmount } },
+      });
+
+      await tx.walletTransaction.create({
+        data: {
+          userId,
+          amount: new Prisma.Decimal(-total),
+          type: 'PAYMENT',
+          referenceId: order.id,
+        },
       });
 
       return this.findById(order.id);

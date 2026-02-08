@@ -15,7 +15,7 @@ import { FormInput } from '@/components/ui/form-input';
 import { FormSubmitError } from '@/components/ui/form-submit-error';
 import { useAppStore } from '@/lib/store';
 import { useBreadcrumb } from '@/lib/breadcrumb-context';
-import { api } from '@/lib/api';
+import { api, ApiError } from '@/lib/api';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -41,29 +41,43 @@ export default function RegisterPage() {
       setAuth(res.user, res.accessToken);
       router.push('/');
     },
+    onError: (err) => {
+      if (err instanceof ApiError && err.errors?.length) {
+        err.errors.forEach((e) => {
+          if (e.field && e.field !== '_') form.setError(e.field as keyof RegisterInput, { type: 'server', message: e.message });
+        });
+      }
+    },
   });
+
+  const globalError =
+    registerMutation.isError && registerMutation.error instanceof ApiError && registerMutation.error.errors?.length
+      ? registerMutation.error.errors.find((e) => e.field === '_' || !e.field)?.message
+      : registerMutation.isError && registerMutation.error instanceof Error
+        ? registerMutation.error.message
+        : null;
 
   const onSubmit = (data: RegisterInput) => {
     registerMutation.mutate(data);
   };
 
   return (
-    <div className="container mx-auto px-4 py-16 flex flex-col items-center">
-      <Card className="w-full max-w-md">
+    <div className="container-narrow py-12 sm:py-16 flex flex-col items-center">
+      <Card className="w-full max-w-[min(100%,28rem)]">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Đăng ký</CardTitle>
+          <CardTitle className="text-fluid-section">Đăng ký</CardTitle>
           <CardDescription>Tạo tài khoản mới để mua acc game</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <FormSubmitError error={registerMutation.isError ? registerMutation.error : null} fallbackMessage="Đăng ký thất bại" />
-              <FormInput name="name" label="Họ tên" placeholder="Nguyễn Văn A" required />
-              <FormInput name="email" label="Email" type="email" placeholder="email@example.com" required />
-              <FormInput name="phone" label="Số điện thoại" placeholder="0123 456 789 (tuỳ chọn)" />
-              <FormInput name="password" label="Mật khẩu" type="password" placeholder="••••••••" required />
-              <FormInput name="confirmPassword" label="Xác nhận mật khẩu" type="password" placeholder="••••••••" required />
-              <Button type="submit" className="w-full" disabled={registerMutation.isPending}>
+              <FormSubmitError error={globalError ? new Error(globalError) : null} fallbackMessage="Đăng ký thất bại" />
+              <FormInput name="name" label="Họ tên" placeholder="Nguyễn Văn A" required data-testid="register-name" />
+              <FormInput name="email" label="Email" type="email" placeholder="email@example.com" required data-testid="register-email" />
+              <FormInput name="phone" label="Số điện thoại" placeholder="0123 456 789 (tuỳ chọn)" data-testid="register-phone" />
+              <FormInput name="password" label="Mật khẩu" type="password" placeholder="••••••••" required data-testid="register-password" />
+              <FormInput name="confirmPassword" label="Xác nhận mật khẩu" type="password" placeholder="••••••••" required data-testid="register-confirmPassword" />
+              <Button type="submit" className="w-full" disabled={registerMutation.isPending} data-testid="register-submit">
                 <UserPlus className="h-4 w-4 mr-2" />
                 {registerMutation.isPending ? 'Đang xử lý...' : 'Đăng ký'}
               </Button>

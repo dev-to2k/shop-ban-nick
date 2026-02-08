@@ -1,8 +1,29 @@
 import type { LoginInput, RegisterInput, CreateAccountInput, CreateOrderInput } from '@shop-ban-nick/shared-schemas';
 import type { AuthResponse, PaginationMeta } from '@shop-ban-nick/shared-schemas';
-import type { IUser, IGame, IGameAccount, IOrder, PaginatedResponse } from '@shop-ban-nick/shared-types';
+import type { IUser, IGame, IGameAccount, IOrder, IWalletTransaction, PaginatedResponse } from '@shop-ban-nick/shared-types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE = API_URL.replace(/\/api\/?$/, '') || 'http://localhost:3001';
+
+/** API lấy hình từ assets → return path (/assets/...) → client dùng getAssetUrl(path) để render từ API. */
+export function getAssetUrl(path: string | null | undefined): string {
+  if (!path) return '';
+  if (path.startsWith('http')) return path;
+  return `${API_BASE}${path.startsWith('/') ? path : `/${path}`}`;
+}
+
+export type ApiFieldError = { field: string; message: string };
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public statusCode: number,
+    public errors: ApiFieldError[] = []
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
+}
 
 async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -16,8 +37,12 @@ async function fetcher<T>(url: string, options?: RequestInit): Promise<T> {
   });
 
   if (!res.ok) {
-    const error = await res.json().catch(() => ({ message: 'Request failed' }));
-    throw new Error(error.message || `Error ${res.status}`);
+    const body = await res.json().catch(() => ({}));
+    const errors: ApiFieldError[] = Array.isArray(body.errors) ? body.errors : [];
+    const message = (body.message as string) || `Error ${res.status}`;
+    const err = new ApiError(message, res.status, errors.length ? errors : [{ field: '_', message }]);
+    (err as ApiError & { body?: unknown }).body = body;
+    throw err;
   }
 
   return res.json();
@@ -32,8 +57,38 @@ export const api = {
     fetcher<AuthResponse>('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
 
   getProfile: () => fetcher<IUser>('/auth/profile'),
+  updateProfile: (dto: { name?: string; phone?: string; avatar?: string }) =>
+    fetcher<IUser>('/auth/profile', { method: 'PATCH', body: JSON.stringify(dto) }),
 
-  // Games
+  // Wallet
+  getWallet: () => fetcher<{ balance: number; transactions: IWalletTransaction[] }>('/wallet'),
+  getWalletTransactions: (params?: { page?: number; limit?: number }) => {
+    const search = new URLSearchParams();
+    if (params?.page != null) search.set('page', String(params.page));
+    if (params?.limit != null) search.set('limit', String(params.limit));
+    const query = search.toString() ? '?' + search.toString() : '';
+    return fetcher<PaginatedResponse<IWalletTransaction>>(`/wallet/transactions${query}`);
+  },
+  createDepositRequest: (body: { amount: number; provider?: string }, returnUrl?: string, cancelUrl?: string) => {
+    const params = new URLSearchParams();
+    if (returnUrl) params.set('returnUrl', returnUrl);
+    if (cancelUrl) params.set('cancelUrl', cancelUrl);
+    const query = params.toString() ? '?' + params.toString() : '';
+    return fetcher<{ requestId: string; amount: number; provider: string; status: string; paymentUrl: string | null; createdAt: string }>(
+      `/wallet/deposit${query}`,
+      { method: 'POST', body: JSON.stringify(body) }
+    );
+  },
+  getDepositRequest: (id: string) =>
+    fetcher<{ id: string; amount: number; provider: string; status: string; paymentUrl: string | null; createdAt: string; completedAt: string | null }>(
+      `/wallet/deposit/${id}`
+    ),
+  confirmDepositRequest: (id: string) =>
+    fetcher<{ balance: number; transaction: IWalletTransaction }>(`/wallet/deposit/${id}/confirm`, { method: 'POST' }),
+
+  getBanners: () =>
+    fetcher<{ image: string; title: string; subtitle: string; href: string; gradient: string; promo?: boolean }[]>('/banners'),
+
   getGames: () => fetcher<IGame[]>('/games'),
   getGameBySlug: (slug: string) => fetcher<IGame>(`/games/${slug}`),
 

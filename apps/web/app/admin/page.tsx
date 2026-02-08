@@ -47,7 +47,7 @@ export default function AdminDashboard() {
               {isLoading ? (
                 <Skeleton className="h-8 w-20" />
               ) : (
-                <div className="text-2xl font-bold">{card.value ?? 0}</div>
+                <div className="text-2xl font-bold tabular-nums">{card.value ?? 0}</div>
               )}
             </CardContent>
           </Card>

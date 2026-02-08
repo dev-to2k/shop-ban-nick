@@ -1,18 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { readdirSync } from 'fs';
+import { join } from 'path';
 import { PrismaService } from '../prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+
+const EXT = ['.png', '.jpg', '.jpeg', '.webp'];
 
 @Injectable()
 export class GameService {
   constructor(private prisma: PrismaService) {}
 
+  /** Đọc list file từ apps/api/assets/games/, map slug -> /assets/games/<file>. */
+  private getThumbnailsDir(): string {
+    const base = process.env.ASSETS_PATH || join(process.cwd(), 'apps', 'api', 'assets');
+    return join(base, 'games');
+  }
+
+  private getThumbnailMap(): Record<string, string> {
+    const dir = this.getThumbnailsDir();
+    const out: Record<string, string> = {};
+    try {
+      for (const name of readdirSync(dir)) {
+        const ext = name.slice(name.lastIndexOf('.')).toLowerCase();
+        if (!EXT.includes(ext)) continue;
+        const slug = name.slice(0, name.lastIndexOf('.'));
+        out[slug] = `/assets/games/${name}`;
+      }
+    } catch {
+      // ignore
+    }
+    return out;
+  }
+
   async findAll(activeOnly = true) {
     const where: Prisma.GameWhereInput = activeOnly ? { isActive: true } : {};
-    return this.prisma.game.findMany({
+    const games = await this.prisma.game.findMany({
       where,
       include: { attributes: true, _count: { select: { accounts: { where: { status: 'AVAILABLE' } } } } },
       orderBy: { createdAt: 'desc' },
     });
+    const thumbs = this.getThumbnailMap();
+    return games.map((g) => ({
+      ...g,
+      thumbnail: thumbs[g.slug] ?? g.thumbnail,
+    }));
   }
 
   async findBySlug(slug: string) {
@@ -21,7 +52,8 @@ export class GameService {
       include: { attributes: true, _count: { select: { accounts: { where: { status: 'AVAILABLE' } } } } },
     });
     if (!game) throw new NotFoundException('Game not found');
-    return game;
+    const thumbs = this.getThumbnailMap();
+    return { ...game, thumbnail: thumbs[game.slug] ?? game.thumbnail };
   }
 
   async findById(id: string) {
@@ -30,7 +62,8 @@ export class GameService {
       include: { attributes: true },
     });
     if (!game) throw new NotFoundException('Game not found');
-    return game;
+    const thumbs = this.getThumbnailMap();
+    return { ...game, thumbnail: thumbs[game.slug] ?? game.thumbnail };
   }
 
   async create(data: {

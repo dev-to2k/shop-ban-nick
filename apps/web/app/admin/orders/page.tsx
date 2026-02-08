@@ -93,7 +93,7 @@ export default function AdminOrdersPage() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold">{formatPrice(Number(order.totalAmount))}</p>
+                      <p className="font-bold tabular-nums">{formatPrice(Number(order.totalAmount))}</p>
                       <p className="text-xs text-muted-foreground">{order.paymentMethod === 'BANK_TRANSFER' ? 'Chuyển khoản' : 'MoMo'}</p>
                     </div>
                   </div>
@@ -105,7 +105,7 @@ export default function AdminOrdersPage() {
                         {order.accounts?.map((acc: any) => (
                           <div key={acc.id} className="flex justify-between text-sm py-1 border-b last:border-0">
                             <span>{acc.game?.name} - {acc.code} - {acc.title}</span>
-                            <span>{formatPrice(Number(acc.price))}</span>
+                            <span className="tabular-nums">{formatPrice(Number(acc.price))}</span>
                           </div>
                         ))}
                       </div>

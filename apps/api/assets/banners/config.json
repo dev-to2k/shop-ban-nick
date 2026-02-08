@@ -1,0 +1,9 @@
+[
+  { "image": "banner-promo.png", "title": "Khuyến mãi", "subtitle": "Acc hot tuần này – Giá tốt nhất, giao ngay", "href": "/games", "gradient": "from-black/30 via-transparent to-transparent", "promo": true },
+  { "image": "banner-lien-quan-mobile.png", "title": "Liên Quân Mobile", "subtitle": "Acc VIP giá rẻ - Full tướng, full skin", "href": "/games/lien-quan-mobile", "gradient": "from-blue-900/90 via-blue-900/50 to-transparent" },
+  { "image": "banner-free-fire.png", "title": "Free Fire", "subtitle": "Acc Thách Đấu - Full nhân vật VIP", "href": "/games/free-fire", "gradient": "from-orange-900/90 via-orange-900/50 to-transparent" },
+  { "image": "banner-crossfire.png", "title": "CrossFire (Đột Kích)", "subtitle": "Acc VIP full súng - KD cao", "href": "/games/crossfire", "gradient": "from-emerald-900/90 via-emerald-900/50 to-transparent" },
+  { "image": "banner-genshin-impact.png", "title": "Genshin Impact", "subtitle": "Acc AR cao - Nhiều nhân vật 5 sao", "href": "/games/genshin-impact", "gradient": "from-cyan-900/90 via-cyan-900/50 to-transparent" },
+  { "image": "banner-pubg-mobile.png", "title": "PUBG Mobile", "subtitle": "Acc Vương Giả - Set skin súng hiếm", "href": "/games/pubg-mobile", "gradient": "from-amber-900/90 via-amber-900/50 to-transparent" },
+  { "image": "banner-valorant.png", "title": "Valorant", "subtitle": "Acc Immortal+ full Agent & skin", "href": "/games/valorant", "gradient": "from-rose-900/90 via-rose-900/50 to-transparent" }
+]

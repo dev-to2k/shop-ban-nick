@@ -4,7 +4,6 @@ import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { withThemeTransition } from '@/lib/theme-transition';
 
 export function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
@@ -20,7 +19,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon"
-      onClick={() => withThemeTransition(() => setTheme(isDark ? 'light' : 'dark'))}
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
       aria-label="Toggle theme"
     >
       <Sun className={`h-5 w-5 shrink-0 ${isDark ? 'hidden' : 'block'}`} aria-hidden />

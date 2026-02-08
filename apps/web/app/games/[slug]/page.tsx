@@ -5,7 +5,7 @@ export default async function GameAccountsPage({ params }: { params: Promise<{ s
   const { slug } = await params;
   return (
     <ProductProvider slug={slug}>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container-narrow py-6 sm:py-8 min-w-0 overflow-x-hidden">
         <GameHeader />
         <ProductFilters />
         <ProductGrid />

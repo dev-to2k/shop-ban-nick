@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 export const createOrderSchema = z.object({
   accountIds: z.array(z.string()).min(1, 'Phải chọn ít nhất 1 acc'),
-  paymentMethod: z.enum(['BANK_TRANSFER', 'MOMO']),
+  paymentMethod: z.enum(['WALLET']),
   note: z.string().optional(),
 });
 

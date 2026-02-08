@@ -6,7 +6,9 @@ import { GameModule } from '../game/game.module';
 import { AccountModule } from '../account/account.module';
 import { OrderModule } from '../order/order.module';
 import { UploadModule } from '../upload/upload.module';
+import { WalletModule } from '../wallet/wallet.module';
 import { PrismaModule } from '../prisma/prisma.module';
+import { BannerModule } from '../banner/banner.module';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { PrismaModule } from '../prisma/prisma.module';
     AccountModule,
     OrderModule,
     UploadModule,
+    WalletModule,
+    BannerModule,
   ],
 })
 export class AppModule {}

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import { api } from '@/lib/api';
+import { api, getAssetUrl } from '@/lib/api';
 import { queryKeys } from '@/lib/query-keys';
 import { useBreadcrumb } from '@/lib/breadcrumb-context';
 
@@ -65,7 +65,7 @@ export default function AdminGamesPage() {
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <div className="h-14 w-14 bg-muted rounded-md flex items-center justify-center overflow-hidden shrink-0">
-                    {game.thumbnail ? <Image src={game.thumbnail} alt="" width={56} height={56} className="w-full h-full object-cover" /> : <Gamepad2 className="h-6 w-6 text-muted-foreground" />}
+                    {game.thumbnail ? <Image src={getAssetUrl(game.thumbnail)} alt="" width={56} height={56} className="w-full h-full object-cover" /> : <Gamepad2 className="h-6 w-6 text-muted-foreground" />}
                   </div>
                   <div>
                     <div className="flex items-center gap-2">

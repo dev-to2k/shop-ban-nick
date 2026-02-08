@@ -36,13 +36,13 @@ export default function OrderDetailClient({ id }: { id: string }) {
     }
   }, [order, setBreadcrumb]);
 
-  if (isLoading) return <div className="container mx-auto px-4 py-8"><Skeleton className="h-64 w-full" /></div>;
-  if (!order) return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Đơn hàng không tồn tại</div>;
+  if (isLoading) return <div className="container-narrow py-6 sm:py-8"><Skeleton className="h-64 w-full" /></div>;
+  if (!order) return <div className="container-narrow py-16 sm:py-20 text-center text-muted-foreground">Đơn hàng không tồn tại</div>;
 
   const status = statusMap[order.status] || { label: order.status, variant: 'secondary' };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-2xl">
+    <div className="container-narrow py-6 sm:py-8 max-w-2xl">
       <Link href="/orders">
         <Button variant="ghost" size="sm" className="mb-4"><ArrowLeft className="h-4 w-4 mr-1" /> Đơn hàng</Button>
       </Link>
@@ -63,14 +63,14 @@ export default function OrderDetailClient({ id }: { id: string }) {
                   <p className="text-sm font-medium">{acc.title}</p>
                   <p className="text-xs text-muted-foreground">{acc.game?.name} &middot; Mã: {acc.code}</p>
                 </div>
-                <span className="text-sm font-semibold">{formatPrice(Number(acc.price))}</span>
+                <span className="text-sm font-semibold tabular-nums">{formatPrice(Number(acc.price))}</span>
               </div>
             ))}
           </div>
           <Separator />
           <div className="flex justify-between font-bold">
             <span>Tổng cộng</span>
-            <span className="text-primary">{formatPrice(Number(order.totalAmount))}</span>
+            <span className="text-primary tabular-nums">{formatPrice(Number(order.totalAmount))}</span>
           </div>
           {order.status === 'COMPLETED' && order.accounts?.some((a: any) => a.loginInfo) && (
             <>

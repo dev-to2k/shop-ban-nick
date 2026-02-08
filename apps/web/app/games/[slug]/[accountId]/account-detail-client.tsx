@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 import Image from 'next/image';
+import { LazyImage } from '@/components/ui/lazy-image';
 import { toast } from 'sonner';
 import { ShoppingCart, Check, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,13 +15,13 @@ import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { api } from '@/lib/api';
 import { queryKeys } from '@/lib/query-keys';
-import { useAppStore } from '@/lib/store';
+import { useCart } from '@/lib/cart-context';
 import { useBreadcrumb } from '@/lib/breadcrumb-context';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
 
 export default function AccountDetailClient({ slug, accountId }: { slug: string; accountId: string }) {
   const router = useRouter();
-  const { addToCart, isInCart } = useAppStore();
+  const { addToCart, isInCart } = useCart();
   const { setItems: setBreadcrumb } = useBreadcrumb();
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -39,7 +40,7 @@ export default function AccountDetailClient({ slug, accountId }: { slug: string;
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container-narrow py-6 sm:py-8">
         <div className="grid md:grid-cols-2 gap-8">
           <Skeleton className="h-96 w-full rounded-lg" />
           <div className="space-y-4">
@@ -53,7 +54,7 @@ export default function AccountDetailClient({ slug, accountId }: { slug: string;
   }
 
   if (!account) {
-    return <div className="container mx-auto px-4 py-20 text-center text-muted-foreground">Acc không tồn tại</div>;
+    return <div className="container-narrow py-16 sm:py-20 text-center text-muted-foreground">Acc không tồn tại</div>;
   }
 
   const images = account.images?.length > 0 ? account.images : [];
@@ -76,7 +77,7 @@ export default function AccountDetailClient({ slug, accountId }: { slug: string;
   const gameName = account.game?.name ?? 'Game';
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container-narrow py-6 sm:py-8">
       <Button variant="ghost" size="sm" className="mb-4" onClick={() => router.back()}>
         <ArrowLeft className="h-4 w-4 mr-1" /> Quay lại
       </Button>
@@ -105,8 +106,8 @@ export default function AccountDetailClient({ slug, accountId }: { slug: string;
           {images.length > 1 && (
             <div className="flex gap-2 mt-3 overflow-x-auto">
               {images.map((img: string, i: number) => (
-                <button key={i} onClick={() => setCurrentImage(i)} className={`h-16 w-16 rounded-md overflow-hidden border-2 shrink-0 ${i === currentImage ? 'border-primary' : 'border-transparent'}`}>
-                  <Image src={img} alt="" width={64} height={64} className="w-full h-full object-cover" />
+                <button key={i} onClick={() => setCurrentImage(i)} className={`relative h-16 w-16 rounded-md overflow-hidden border-2 shrink-0 ${i === currentImage ? 'border-primary' : 'border-transparent'}`}>
+                  <LazyImage src={img} alt="" width={64} height={64} className="w-full h-full object-cover" placeholderClassName="relative h-16 w-16" />
                 </button>
               ))}
             </div>
@@ -117,7 +118,7 @@ export default function AccountDetailClient({ slug, accountId }: { slug: string;
           <Badge variant="secondary">{account.game?.name}</Badge>
           <h1 className="text-2xl font-bold mt-2">{account.title}</h1>
           <p className="text-sm text-muted-foreground mt-1">Mã: {account.code}</p>
-          <div className="text-3xl font-bold text-primary mt-4">{formatPrice(Number(account.price))}</div>
+          <div className="text-3xl font-bold text-primary mt-4 tabular-nums">{formatPrice(Number(account.price))}</div>
           <Separator className="my-4" />
           {account.attributes && Object.keys(account.attributes).length > 0 && (
             <Card className="mb-4">

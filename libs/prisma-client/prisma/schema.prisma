@@ -36,20 +36,80 @@ enum OrderStatus {
 enum PaymentMethod {
   BANK_TRANSFER
   MOMO
+  WALLET
+}
+
+enum WalletTransactionType {
+  DEPOSIT
+  PAYMENT
+  REFUND
+}
+
+enum PaymentProvider {
+  DEMO
+  MOMO
+  VNPAY
+}
+
+enum DepositRequestStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  EXPIRED
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  phone     String?  @unique
-  password  String
-  name      String
-  role      Role     @default(CUSTOMER)
-  orders    Order[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String           @id @default(uuid())
+  email           String           @unique
+  phone           String?          @unique
+  password        String
+  name            String
+  avatar          String?
+  role            Role             @default(CUSTOMER)
+  walletBalance   Decimal          @default(0)
+  orders          Order[]
+  walletTransactions WalletTransaction[]
+  depositRequests DepositRequest[]
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 
   @@map("users")
+}
+
+model DepositRequest {
+  id               String                @id @default(uuid())
+  userId           String
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount           Decimal
+  provider         PaymentProvider
+  status           DepositRequestStatus  @default(PENDING)
+  externalId       String?
+  paymentUrl       String?
+  metadata         Json?
+  createdAt        DateTime              @default(now())
+  completedAt      DateTime?
+  walletTransaction WalletTransaction?
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+  @@map("deposit_requests")
+}
+
+model WalletTransaction {
+  id               String                @id @default(uuid())
+  userId           String
+  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount           Decimal
+  type             WalletTransactionType
+  referenceId      String?
+  depositRequestId String?               @unique
+  depositRequest   DepositRequest?       @relation(fields: [depositRequestId], references: [id])
+  createdAt        DateTime              @default(now())
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("wallet_transactions")
 }
 
 model Game {

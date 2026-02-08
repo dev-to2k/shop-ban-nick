@@ -1,4 +1,5 @@
 export const queryKeys = {
+  banners: { all: ['banners'] as const },
   games: {
     all: ['games'] as const,
     bySlug: (slug: string) => ['games', slug] as const,
@@ -10,6 +11,10 @@ export const queryKeys = {
   orders: {
     my: (params?: Record<string, string>) => ['orders', 'my', params] as const,
     byId: (id: string) => ['orders', id] as const,
+  },
+  wallet: {
+    all: ['wallet'] as const,
+    transactions: (params?: { page?: number; limit?: number }) => ['wallet', 'transactions', params] as const,
   },
   admin: {
     games: ['admin', 'games'] as const,

@@ -1,9 +1,9 @@
 @import 'tailwindcss';
-@import './styles/themes/neon.css';
-@import './styles/themes/valorant.css';
-@import './styles/themes/lol.css';
 
 @theme inline {
+  --color-header-bg: var(--header-bg);
+  --color-header-border: var(--header-border);
+  --color-header-foreground: var(--header-foreground);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -37,15 +37,18 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+  --color-section-alt: var(--section-alt-bg);
   --color-glow: var(--glow);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+  --space-unit: 0.5rem;
+  --container-max: min(100%, 80rem);
 }
 
 /* ═══════════════════════════════════════════════════
-   DEFAULT THEME (shadcn neutral)
+   DEFAULT THEME — đỏ tươi (vivid red, matches header)
    ═══════════════════════════════════════════════════ */
 
 :root {
@@ -59,31 +62,38 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
+  --muted: oklch(0.97 0.008 25);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.96 0.03 25);
+  --accent-foreground: oklch(0.25 0.08 25);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
+  --border: oklch(0.90 0 0);
+  --input: oklch(0.90 0 0);
+  --ring: oklch(0.55 0.22 25);
+  --chart-1: oklch(0.55 0.22 25);
+  --chart-2: oklch(0.6 0.15 180);
+  --chart-3: oklch(0.65 0.12 50);
+  --chart-4: oklch(0.6 0.14 280);
+  --chart-5: oklch(0.58 0.2 340);
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar-primary: oklch(0.55 0.22 25);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.96 0.03 25);
+  --sidebar-accent-foreground: oklch(0.25 0.08 25);
+  --sidebar-border: oklch(0.90 0.03 25);
+  --sidebar-ring: oklch(0.55 0.22 25);
+  --header-bg: oklch(1 0 0);
+  --header-border: oklch(0.55 0.22 25);
+  --header-foreground: oklch(0.145 0 0);
+  --section-alt-bg: oklch(0.98 0.002 250);
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: oklch(0.65 0.02 25 / 0.4);
+  --scrollbar-thumb-hover: oklch(0.55 0.12 25 / 0.65);
 }
 
 .dark {
@@ -93,31 +103,38 @@
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --primary: oklch(0.60 0.25 25);
+  --primary-foreground: oklch(0.98 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
+  --muted: oklch(0.269 0.02 25);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: oklch(0.28 0.04 25);
+  --accent-foreground: oklch(0.98 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
+  --border: oklch(0.32 0 0);
+  --input: oklch(0.32 0 0);
+  --ring: oklch(0.60 0.25 25);
+  --chart-1: oklch(0.60 0.25 25);
+  --chart-2: oklch(0.65 0.15 180);
+  --chart-3: oklch(0.68 0.12 50);
+  --chart-4: oklch(0.62 0.16 280);
+  --chart-5: oklch(0.58 0.2 340);
   --sidebar: oklch(0.205 0 0);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-primary: oklch(0.60 0.25 25);
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-accent: oklch(0.28 0.04 25);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  --sidebar-border: oklch(0.32 0 0);
+  --sidebar-ring: oklch(0.60 0.25 25);
+  --header-bg: var(--background);
+  --header-border: oklch(0.60 0.25 25);
+  --header-foreground: var(--foreground);
+  --section-alt-bg: oklch(0.22 0.02 250 / 0.2);
+  --scrollbar-track: transparent;
+  --scrollbar-thumb: oklch(0.55 0.02 25 / 0.35);
+  --scrollbar-thumb-hover: oklch(0.65 0.14 25 / 0.6);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -128,12 +145,80 @@
   html {
     font-size: var(--font-size-base);
   }
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@layer utilities {
+  .text-fluid-hero {
+    font-size: clamp(1.75rem, 2vw + 1rem, 3rem);
+  }
+  .text-fluid-section {
+    font-size: clamp(1.25rem, 1.5vw + 0.75rem, 1.5rem);
+  }
+  .container-narrow {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  @media (min-width: 30em) {
+    .container-narrow { padding-left: 1.5rem; padding-right: 1.5rem; }
+  }
+  @media (min-width: 48em) {
+    .container-narrow { padding-left: 2rem; padding-right: 2rem; }
+  }
+}
+
+/* Scrollbar — track trong suốt, thumb mỏng tông theme, hover tinh tế */
+html,
+body,
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  border-radius: 3px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+html::-webkit-scrollbar-corner,
+body::-webkit-scrollbar-corner,
+*::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 /* Glow effects — only visible when theme sets --glow to non-transparent */
@@ -144,25 +229,24 @@
 .hover\:glow-sm:hover { box-shadow: 0 0 10px var(--glow, transparent); }
 .hover\:glow-md:hover { box-shadow: 0 0 20px var(--glow, transparent); }
 
-/*
- * Theme transition — ON-DEMAND only.
- * The .theme-transitioning class is added briefly (350ms) during theme changes.
- * Scoped to layout containers + interactive elements to avoid animating 500+ nodes.
- */
-html.theme-transitioning body,
-html.theme-transitioning header,
-html.theme-transitioning main,
-html.theme-transitioning footer,
-html.theme-transitioning .bg-background,
-html.theme-transitioning .bg-card,
-html.theme-transitioning .bg-muted,
-html.theme-transitioning .bg-popover,
-html.theme-transitioning .bg-primary,
-html.theme-transitioning .bg-secondary,
-html.theme-transitioning .bg-accent,
-html.theme-transitioning button,
-html.theme-transitioning input,
-html.theme-transitioning textarea,
-html.theme-transitioning select {
-  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, border-radius 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease !important;
+/* @formkit/auto-animate: GPU layer for direct children to avoid layout thrash */
+[data-auto-animate] > * {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Bottom sheet mobile: slide in from bottom, slide out to bottom */
+@keyframes sheet-in {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+@keyframes sheet-out {
+  from { transform: translateY(0); }
+  to { transform: translateY(100%); }
+}
+.alert-dialog-sheet-in {
+  animation: sheet-in 0.22s ease-out;
+}
+.alert-dialog-sheet-out {
+  animation: sheet-out 0.22s ease-out forwards;
 }

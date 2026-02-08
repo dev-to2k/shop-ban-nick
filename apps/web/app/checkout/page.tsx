@@ -1,47 +1,69 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { createOrderSchema, type CreateOrderInput } from '@shop-ban-nick/shared-schemas';
-import { CreditCard, QrCode, ArrowLeft, LogIn, Gamepad2 } from 'lucide-react';
+import { Wallet, ArrowLeft, LogIn, Gamepad2, PlusCircle, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
-import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form';
+import { Form } from '@/components/ui/form';
 import { FormInput } from '@/components/ui/form-input';
 import { FormSubmitError } from '@/components/ui/form-submit-error';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useAppStore } from '@/lib/store';
+import { useCart } from '@/lib/cart-context';
 import { useBreadcrumb } from '@/lib/breadcrumb-context';
 import { api } from '@/lib/api';
+import { queryKeys } from '@/lib/query-keys';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
+import { useCurrencyInput } from '@/lib/use-currency-input';
+import type { ApiError } from '@/lib/api';
+
+const CHECKOUT_URL = '/checkout';
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { cart, clearCart, auth } = useAppStore();
+  const queryClient = useQueryClient();
+  const { auth } = useAppStore();
+  const { cart, clearCart } = useCart();
   const { setItems: setBreadcrumb } = useBreadcrumb();
+  const depositCurrency = useCurrencyInput({ max: 999_999_999, initialValue: 0 });
 
   useEffect(() => {
     setBreadcrumb([{ label: 'Trang chủ', href: '/' }, { label: 'Giỏ hàng', href: '/cart' }, { label: 'Thanh toán' }]);
     return () => setBreadcrumb([]);
   }, [setBreadcrumb]);
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
+  const totalItems = cart.reduce((s, i) => s + (i.quantity ?? 1), 0);
+  const total = cart.reduce((sum, item) => {
+    const unit = item.discount && item.discount > 0 ? Math.round(item.price * (1 - item.discount / 100)) : item.price;
+    return sum + unit * (item.quantity ?? 1);
+  }, 0);
+
+  const { data: wallet, isLoading: walletLoading } = useQuery({
+    queryKey: queryKeys.wallet.all,
+    queryFn: () => api.getWallet(),
+    enabled: !!auth.token,
+  });
+
+  const balance = wallet?.balance ?? 0;
+  const insufficient = balance < total;
+  const shortfall = insufficient ? total - balance : 0;
 
   const form = useForm<CreateOrderInput>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
-      accountIds: cart.map((i) => i.id),
-      paymentMethod: 'BANK_TRANSFER',
+      accountIds: cart.flatMap((i) => Array(i.quantity ?? 1).fill(i.id)),
+      paymentMethod: 'WALLET',
       note: '',
     },
   });
-
-  const paymentMethod = form.watch('paymentMethod');
 
   const orderMutation = useMutation({
     mutationFn: (data: CreateOrderInput) => api.createOrder({ ...data, note: data.note || undefined }),
@@ -51,10 +73,31 @@ export default function CheckoutPage() {
     },
   });
 
+  const depositMutation = useMutation({
+    mutationFn: (amount: number) =>
+      api.createDepositRequest(
+        { amount, provider: 'DEMO' },
+        `${typeof window !== 'undefined' ? window.location.origin : ''}${CHECKOUT_URL}`,
+        CHECKOUT_URL
+      ),
+    onSuccess: (res) => {
+      if (res.paymentUrl) {
+        window.location.href = res.paymentUrl;
+        return;
+      }
+      queryClient.invalidateQueries({ queryKey: queryKeys.wallet.all });
+    },
+  });
+
+  const handleDeposit = () => {
+    const amount = depositCurrency.numericValue > 0 ? depositCurrency.numericValue : Math.max(shortfall, 10000);
+    depositMutation.mutate(amount);
+  };
+
   if (!auth.token) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-muted-foreground mb-4">Vui lòng đăng nhập để thanh toán</p>
+      <div className="container-narrow py-16 sm:py-20 text-center">
+        <CardDescription className="mb-4">Vui lòng đăng nhập để thanh toán</CardDescription>
         <Link href="/login"><Button><LogIn className="h-4 w-4 mr-2" />Đăng nhập</Button></Link>
       </div>
     );
@@ -62,119 +105,140 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
-        <p className="text-muted-foreground mb-4">Giỏ hàng trống</p>
+      <div className="container-narrow py-16 sm:py-20 text-center">
+        <CardDescription className="mb-4">Giỏ hàng trống</CardDescription>
         <Link href="/games"><Button><Gamepad2 className="h-4 w-4 mr-2" />Xem game</Button></Link>
       </div>
     );
   }
 
+  const orderError = orderMutation.error as ApiError & { body?: { code?: string } };
+  const showInsufficientUI = insufficient || orderError?.body?.code === 'INSUFFICIENT_BALANCE';
+
   const onSubmit = (data: CreateOrderInput) => {
-    orderMutation.mutate(data);
+    orderMutation.mutate({
+      ...data,
+      accountIds: cart.flatMap((i) => Array(i.quantity ?? 1).fill(i.id)),
+    });
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-3xl">
+    <div className="container-narrow py-6 sm:py-8 max-w-3xl">
       <Link href="/cart">
         <Button variant="ghost" size="sm" className="mb-4"><ArrowLeft className="h-4 w-4 mr-1" /> Giỏ hàng</Button>
       </Link>
 
       <h1 className="text-2xl font-bold mb-6">Thanh toán</h1>
 
-      <FormSubmitError error={orderMutation.isError ? orderMutation.error : null} fallbackMessage="Đặt hàng thất bại" className="mb-4" />
+      <FormSubmitError
+        error={orderMutation.isError && orderError?.body?.code !== 'INSUFFICIENT_BALANCE' ? orderMutation.error : null}
+        fallbackMessage="Đặt hàng thất bại"
+        className="mb-4"
+      />
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Order summary */}
             <Card>
-              <CardHeader><CardTitle className="text-base">Đơn hàng ({cart.length} acc)</CardTitle></CardHeader>
+              <CardHeader><CardTitle className="text-base">Đơn hàng ({totalItems} acc)</CardTitle></CardHeader>
               <CardContent className="space-y-2">
-                {cart.map((item) => (
-                  <div key={item.id} className="flex justify-between py-2 border-b last:border-0">
-                    <div>
-                      <p className="text-sm font-medium">{item.title}</p>
-                      <p className="text-xs text-muted-foreground">{item.gameName} - {item.code}</p>
+                {cart.map((item) => {
+                  const qty = item.quantity ?? 1;
+                  const unit = item.discount && item.discount > 0 ? Math.round(item.price * (1 - item.discount / 100)) : item.price;
+                  return (
+                    <div key={item.id} className="flex justify-between py-2 border-b last:border-0">
+                      <div>
+                        <p className="text-sm font-medium">{item.title}{qty > 1 ? ` × ${qty}` : ''}</p>
+                        <CardDescription className="text-xs">{item.gameName} - {item.code}</CardDescription>
+                      </div>
+                      <span className="text-sm font-semibold tabular-nums">{formatPrice(unit * qty)}</span>
                     </div>
-                    <span className="text-sm font-semibold">{formatPrice(item.price)}</span>
-                  </div>
-                ))}
+                  );
+                })}
                 <Separator />
                 <div className="flex justify-between font-bold text-lg">
                   <span>Tổng</span>
-                  <span className="text-primary">{formatPrice(total)}</span>
+                  <span className="text-primary tabular-nums">{formatPrice(total)}</span>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Payment */}
             <div className="space-y-4">
               <Card>
-                <CardHeader><CardTitle className="text-base">Phương thức thanh toán</CardTitle></CardHeader>
+                <CardHeader><CardTitle className="text-base">Thanh toán bằng ví</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
-                  <FormField control={form.control} name="paymentMethod" render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="space-y-3">
-                          <button
-                            type="button"
-                            className={`w-full p-3 rounded-md border text-left flex items-center gap-3 transition-colors ${field.value === 'BANK_TRANSFER' ? 'border-primary bg-primary/5' : 'hover:bg-muted'}`}
-                            onClick={() => field.onChange('BANK_TRANSFER')}
-                          >
-                            <CreditCard className="h-5 w-5" />
-                            <div>
-                              <p className="font-medium text-sm">Chuyển khoản ngân hàng</p>
-                              <p className="text-xs text-muted-foreground">Vietcombank, Techcombank, MB Bank...</p>
-                            </div>
-                          </button>
-                          <button
-                            type="button"
-                            className={`w-full p-3 rounded-md border text-left flex items-center gap-3 transition-colors ${field.value === 'MOMO' ? 'border-primary bg-primary/5' : 'hover:bg-muted'}`}
-                            onClick={() => field.onChange('MOMO')}
-                          >
-                            <QrCode className="h-5 w-5" />
-                            <div>
-                              <p className="font-medium text-sm">MoMo</p>
-                              <p className="text-xs text-muted-foreground">Quét QR hoặc chuyển tiền MoMo</p>
-                            </div>
-                          </button>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )} />
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader><CardTitle className="text-base">Thông tin chuyển khoản</CardTitle></CardHeader>
-                <CardContent className="space-y-2 text-sm">
-                  {paymentMethod === 'BANK_TRANSFER' ? (
-                    <>
-                      <div className="bg-muted p-3 rounded-md space-y-1">
-                        <p><span className="text-muted-foreground">Ngân hàng:</span> <strong>Vietcombank</strong></p>
-                        <p><span className="text-muted-foreground">STK:</span> <strong>1234567890</strong></p>
-                        <p><span className="text-muted-foreground">Chủ TK:</span> <strong>SHOP ACC GAME</strong></p>
-                        <p><span className="text-muted-foreground">Nội dung CK:</span> <strong>{auth.user?.email} {auth.user?.phone || ''}</strong></p>
-                      </div>
-                      <Badge variant="warning" className="text-xs">Sau khi chuyển khoản, admin sẽ xác nhận trong 5-15 phút</Badge>
-                    </>
+                  {walletLoading ? (
+                    <p className="text-sm text-muted-foreground">Đang tải số dư...</p>
                   ) : (
-                    <div className="bg-muted p-3 rounded-md space-y-1">
-                      <p><span className="text-muted-foreground">SĐT MoMo:</span> <strong>0123 456 789</strong></p>
-                      <p><span className="text-muted-foreground">Tên:</span> <strong>SHOP ACC GAME</strong></p>
-                      <p><span className="text-muted-foreground">Nội dung:</span> <strong>{auth.user?.email}</strong></p>
-                    </div>
+                    <>
+                      <div className="flex items-center justify-between p-3 rounded-md bg-muted/50">
+                        <span className="text-sm text-muted-foreground">Số dư ví</span>
+                        <span className="font-semibold tabular-nums">{formatPrice(balance)}</span>
+                      </div>
+                      {insufficient && (
+                        <div className="flex items-center gap-2 p-3 rounded-md bg-destructive/10 text-destructive text-sm">
+                          <AlertCircle className="h-4 w-4 shrink-0" />
+                          <span>Thiếu {formatPrice(shortfall)} để thanh toán. Nạp thêm tiền bên dưới rồi đặt hàng.</span>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
 
+              {showInsufficientUI && (
+                <Card className="border-primary/50">
+                  <CardHeader>
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <PlusCircle className="h-4 w-4" /> Nạp tiền nhanh
+                    </CardTitle>
+                    <CardDescription>Nạp tiền vào ví ngay trên trang này, sau khi nạp xong quay lại để đặt hàng.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="space-y-2">
+                      <Label>Số tiền cần nạp (VNĐ)</Label>
+                      <Input
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete="off"
+                        value={depositCurrency.value}
+                        onChange={depositCurrency.onChange}
+                        placeholder={depositCurrency.formatPlaceholder(shortfall > 0 ? shortfall : 50000)}
+                        className="tabular-nums"
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="secondary"
+                      className="w-full"
+                      onClick={handleDeposit}
+                      disabled={depositMutation.isPending}
+                    >
+                      {depositMutation.isPending ? 'Đang tạo...' : 'Nạp ngay (quay lại trang thanh toán sau khi nạp)'}
+                    </Button>
+                    <CardDescription className="text-xs">
+                      Bạn sẽ chuyển đến cổng thanh toán; sau khi hoàn tất sẽ tự quay lại trang này.
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              )}
+
               <FormInput name="note" label="Ghi chú (tuỳ chọn)" placeholder="Ghi chú cho đơn hàng..." />
 
-              <Button type="submit" className="w-full" size="lg" disabled={orderMutation.isPending}>
-                <CreditCard className="h-4 w-4 mr-2" />
-                {orderMutation.isPending ? 'Đang xử lý...' : `Đặt hàng - ${formatPrice(total)}`}
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                disabled={orderMutation.isPending || insufficient || walletLoading}
+              >
+                <Wallet className="h-4 w-4 mr-2" />
+                {orderMutation.isPending ? 'Đang xử lý...' : (
+                  <span className="tabular-nums">Thanh toán {formatPrice(total)} từ ví</span>
+                )}
               </Button>
+              {insufficient && (
+                <CardDescription className="text-center text-sm">Nạp đủ tiền vào ví để bấm thanh toán.</CardDescription>
+              )}
             </div>
           </div>
         </form>

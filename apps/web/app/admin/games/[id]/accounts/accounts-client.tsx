@@ -126,7 +126,7 @@ export default function AdminGameAccountsClient() {
                     <p className="text-sm font-medium truncate">{acc.title}</p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
-                    <span className="font-semibold text-sm">{formatPrice(Number(acc.price))}</span>
+                    <span className="font-semibold text-sm tabular-nums">{formatPrice(Number(acc.price))}</span>
                     <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => handleDelete(acc.id)} disabled={deleteMutation.isPending}>
                       <Trash2 className="h-3 w-3" />
                     </Button>

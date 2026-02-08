@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (!auth.user || auth.user.role !== 'ADMIN') {
     return (
-      <div className="container mx-auto px-4 py-20 text-center">
+      <div className="container-narrow py-16 sm:py-20 text-center">
         <p className="text-muted-foreground mb-4">Bạn không có quyền truy cập trang này</p>
         <Link href="/"><Button><Home className="h-4 w-4 mr-2" />Về trang chủ</Button></Link>
       </div>

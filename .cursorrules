@@ -1,0 +1,12 @@
+# Rules for SEO Best Practices in Next.js
+
+- Always use next/image for all images instead of <img>. This enables automatic optimization for performance and SEO.
+- Add descriptive alt text to every image: e.g., alt="Detailed description of the image for accessibility and search engines".
+- For responsive images, always add sizes prop based on layout: e.g., sizes="(max-width: 768px) 100vw, 50vw".
+- Use priority={true} for above-the-fold images (e.g., hero banners) to improve LCP (Largest Contentful Paint) for Core Web Vitals.
+- Add semantic HTML: Use <header>, <main>, <footer>, <article> where appropriate.
+- For pages, add unique <title> and meta description in metadata (use export const metadata in app router).
+- Optimize for mobile: Ensure images are responsive and use modern formats (WebP/AVIF via next/image).
+- Refactor to reduce code duplication: Extract reusable components like image widgets.
+- Clean up: Remove unused styles, use Tailwind or CSS modules for better maintainability.
+- When refactoring, plan first: Research codebase, ask questions if unclear, then implement.

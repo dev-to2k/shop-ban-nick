@@ -28,6 +28,13 @@ export enum OrderStatus {
 export enum PaymentMethod {
   BANK_TRANSFER = 'BANK_TRANSFER',
   MOMO = 'MOMO',
+  WALLET = 'WALLET',
+}
+
+export enum WalletTransactionType {
+  DEPOSIT = 'DEPOSIT',
+  PAYMENT = 'PAYMENT',
+  REFUND = 'REFUND',
 }
 
 // ============ INTERFACES ============
@@ -36,9 +43,45 @@ export interface IUser {
   email: string;
   phone?: string;
   name: string;
+  avatar?: string;
   role: Role;
+  walletBalance?: number;
   createdAt: string;
   updatedAt: string;
+}
+
+export enum PaymentProvider {
+  DEMO = 'DEMO',
+  MOMO = 'MOMO',
+  VNPAY = 'VNPAY',
+}
+
+export enum DepositRequestStatus {
+  PENDING = 'PENDING',
+  COMPLETED = 'COMPLETED',
+  FAILED = 'FAILED',
+  EXPIRED = 'EXPIRED',
+}
+
+export interface IDepositRequest {
+  id: string;
+  userId: string;
+  amount: number;
+  provider: PaymentProvider;
+  status: DepositRequestStatus;
+  externalId?: string;
+  paymentUrl?: string;
+  createdAt: string;
+  completedAt?: string;
+}
+
+export interface IWalletTransaction {
+  id: string;
+  userId: string;
+  amount: number;
+  type: WalletTransactionType;
+  referenceId?: string;
+  createdAt: string;
 }
 
 export interface IGame {
