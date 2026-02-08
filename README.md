@@ -78,3 +78,14 @@ npm run dev:web
 - `GET /api/admin/orders` - Danh sách đơn
 - `PUT /api/admin/orders/:id/status` - Cập nhật trạng thái đơn
 - `GET /api/admin/orders/stats` - Thống kê
+
+## Deploy (Vercel – frontend only)
+
+1. [Import repo](https://vercel.com/new) → chọn repo.
+2. **Root Directory**: `apps/web`.
+3. **Build / Install**: dùng mặc định (đã set trong `apps/web/vercel.json`).
+4. **Environment Variables** (Vercel Project Settings → Environment Variables):
+   - `NEXT_PUBLIC_API_URL` – URL API (vd: `https://api.yourdomain.com/api`)
+   - `NEXT_PUBLIC_APP_URL` – URL site (vd: `https://yourdomain.com`)
+   - (Tuỳ chọn) `NEXT_PUBLIC_FEATURED_GAME_SLUG`, `NEXT_PUBLIC_ZALO_PHONE`, `NEXT_PUBLIC_FACEBOOK_URL`, `NEXT_PUBLIC_SUPPORT_EMAIL`, `NEXT_PUBLIC_BANK_*`.
+5. Deploy. API (NestJS) cần host riêng (Railway, Render, VPS, …).
