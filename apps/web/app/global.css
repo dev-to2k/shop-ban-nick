@@ -1,5 +1,9 @@
 @import 'tailwindcss';
 
+/* Monorepo: scan libs so Tailwind includes classes from shared-web + feature libs */
+@source "../../../libs/shared/web/**/*.{ts,tsx}";
+@source "../../../libs/features/**/*.{ts,tsx}";
+
 @theme inline {
   --color-header-bg: var(--header-bg);
   --color-header-border: var(--header-border);
@@ -45,6 +49,16 @@
   --radius-xl: calc(var(--radius) + 4px);
   --space-unit: 0.5rem;
   --container-max: min(100%, 80rem);
+  @keyframes accordion-down {
+    from { height: 0; }
+    to { height: var(--radix-accordion-content-height); }
+  }
+  @keyframes accordion-up {
+    from { height: var(--radix-accordion-content-height); }
+    to { height: 0; }
+  }
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
 }
 
 /* ═══════════════════════════════════════════════════
