@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum AttributeType {
+  TEXT
+  NUMBER
+  SELECT
+}
+
+enum AccountStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+  HIDDEN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentMethod {
+  BANK_TRANSFER
+  MOMO
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  phone     String?  @unique
+  password  String
+  name      String
+  role      Role     @default(CUSTOMER)
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Game {
+  id          String          @id @default(uuid())
+  name        String
+  slug        String          @unique
+  thumbnail   String?
+  description String?
+  isActive    Boolean         @default(true)
+  accounts    GameAccount[]
+  attributes  GameAttribute[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@map("games")
+}
+
+model GameAttribute {
+  id      String        @id @default(uuid())
+  gameId  String
+  game    Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  name    String
+  type    AttributeType @default(TEXT)
+  options Json?
+
+  @@map("game_attributes")
+}
+
+model GameAccount {
+  id          String        @id @default(uuid())
+  code        String        @unique
+  gameId      String
+  game        Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  price       Decimal
+  images      String[]
+  attributes  Json?
+  status      AccountStatus @default(AVAILABLE)
+  loginInfo   String?
+  orderId     String?
+  order       Order?        @relation(fields: [orderId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([gameId])
+  @@index([status])
+  @@index([price])
+  @@map("game_accounts")
+}
+
+model Order {
+  id            String        @id @default(uuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  accounts      GameAccount[]
+  totalAmount   Decimal
+  status        OrderStatus   @default(PENDING)
+  paymentMethod PaymentMethod
+  paymentProof  String?
+  note          String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@map("orders")
+}

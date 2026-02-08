@@ -1,96 +1,80 @@
-# TempNxWorkspace
+# ShopAcc - Web Bán Acc Game
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Nx monorepo MVP cho web bán acc game. Next.js 16 + NestJS 11 + PostgreSQL + Prisma 6 + shadcn/ui.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+## Tech Stack
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+- **Frontend**: Next.js 16 (App Router, Turbopack) + shadcn/ui + Zustand 5
+- **Backend**: NestJS 11 (REST API) + Passport JWT
+- **Database**: PostgreSQL 18 + Prisma 6
+- **Monorepo**: Nx 22
+- **Styling**: TailwindCSS 4 (via shadcn/ui)
 
-## Run tasks
+## Cấu trúc
 
-To run tasks with Nx use:
-
-```sh
-npx nx <target> <project-name>
+```
+apps/web/          - Next.js frontend
+apps/api/          - NestJS backend API
+libs/shared/types/ - Shared TypeScript types/DTOs
+libs/shared/utils/ - Shared utilities
+libs/prisma-client/- Prisma schema & client
 ```
 
-For example:
+## Bắt đầu
 
-```sh
-npx nx build myproject
+### 1. Khởi động PostgreSQL
+
+```bash
+docker-compose up -d
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+### 2. Chạy migration & seed
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
+```bash
+npm run db:migrate
+npm run db:seed
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+### 3. Chạy dev servers
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+```bash
+# Terminal 1 - API (port 3001)
+npm run dev:api
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
+# Terminal 2 - Web (port 4200)
+npm run dev:web
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+### 4. Truy cập
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Web: http://localhost:4200
+- API: http://localhost:3001
+- pgAdmin: http://localhost:5050 (admin@admin.com / admin)
+- Prisma Studio: `npm run db:studio`
 
-## Set up CI!
+## Tài khoản test
 
-### Step 1
+- **Admin**: admin@shopnick.vn / admin123
+- **Sample data**: 3 games (Liên Quân, Free Fire, Genshin) + 7 acc mẫu
 
-To connect to Nx Cloud, run the following command:
+## API Endpoints
 
-```sh
-npx nx connect
-```
+### Public
+- `GET /api/games` - Danh sách game
+- `GET /api/games/:slug` - Chi tiết game
+- `GET /api/games/:slug/accounts` - Acc theo game (filter, sort, pagination)
+- `GET /api/accounts/:id` - Chi tiết acc
+- `POST /api/auth/register` - Đăng ký
+- `POST /api/auth/login` - Đăng nhập
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+### Authenticated
+- `POST /api/orders` - Tạo đơn hàng
+- `GET /api/orders/my` - Đơn hàng của tôi
+- `POST /api/upload` - Upload ảnh
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Admin
+- `CRUD /api/admin/games` - Quản lý game
+- `CRUD /api/admin/accounts` - Quản lý acc
+- `GET /api/admin/orders` - Danh sách đơn
+- `PUT /api/admin/orders/:id/status` - Cập nhật trạng thái đơn
+- `GET /api/admin/orders/stats` - Thống kê
