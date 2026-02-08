@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from '@shop-ban-nick/api-auth';
+import { AuthModule } from '@shop-ban-nick/feature-auth/api';
 import { GameService } from './game.service';
 import { GameController } from './game.controller';
 import { AdminGameController } from './admin-game.controller';

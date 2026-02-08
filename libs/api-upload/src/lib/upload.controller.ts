@@ -2,7 +2,7 @@ import { Controller, Post, UseGuards, UseInterceptors, UploadedFile, UploadedFil
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { JwtAuthGuard } from '@shop-ban-nick/api-auth';
+import { JwtAuthGuard } from '@shop-ban-nick/feature-auth/api';
 
 const storage = diskStorage({
   destination: './uploads',

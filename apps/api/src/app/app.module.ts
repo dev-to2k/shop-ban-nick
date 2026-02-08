@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { PrismaModule } from '@shop-ban-nick/nest-prisma';
-import { AuthModule } from '@shop-ban-nick/api-auth';
+import { AuthModule } from '@shop-ban-nick/feature-auth/api';
 import { GameModule } from '@shop-ban-nick/api-game';
 import { AccountModule } from '@shop-ban-nick/api-account';
 import { OrderModule } from '@shop-ban-nick/api-order';

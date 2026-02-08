@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { AccountService } from './account.service';
-import { JwtAuthGuard, RolesGuard, Roles } from '@shop-ban-nick/api-auth';
+import { JwtAuthGuard, RolesGuard, Roles } from '@shop-ban-nick/feature-auth/api';
 import type { UpdateAccountDto } from '@shop-ban-nick/shared-types';
 import { CreateAccountDto } from './dto';
 

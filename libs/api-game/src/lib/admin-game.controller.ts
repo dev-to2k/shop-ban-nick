@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { GameService } from './game.service';
-import { JwtAuthGuard, RolesGuard, Roles } from '@shop-ban-nick/api-auth';
+import { JwtAuthGuard, RolesGuard, Roles } from '@shop-ban-nick/feature-auth/api';
 import { CreateGameDto, UpdateGameDto } from './dto';
 
 @Controller('api/admin/games')

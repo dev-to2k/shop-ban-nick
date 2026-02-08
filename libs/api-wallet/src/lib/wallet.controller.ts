@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query, Request, UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '@shop-ban-nick/api-auth';
+import { JwtAuthGuard } from '@shop-ban-nick/feature-auth/api';
 import { WalletService } from './wallet.service';
 import { CreateDepositRequestDto } from './dto';
 

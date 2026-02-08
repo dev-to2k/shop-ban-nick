@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Post, Put, Query, Request, UseGuards } from '@nestjs/common';
 import { OrderService } from './order.service';
-import { JwtAuthGuard } from '@shop-ban-nick/api-auth';
+import { JwtAuthGuard } from '@shop-ban-nick/feature-auth/api';
 import { CreateOrderDto } from './dto';
 
 @Controller('api/orders')
