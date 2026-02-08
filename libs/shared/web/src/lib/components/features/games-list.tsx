@@ -69,15 +69,7 @@ export function GamesList({
           : 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4'
       }
     >
-      {games.map(
-        (game: {
-          id: string;
-          name: string;
-          slug: string;
-          thumbnail?: string | null;
-          description?: string;
-          _count?: { accounts: number };
-        }) => (
+      {games.map((game) => (
           <Link key={game.id} href={`/games/${game.slug}`}>
             <Card className="hover:shadow-lg transition-shadow cursor-pointer flex flex-col h-full group">
               <GameThumb

@@ -71,17 +71,7 @@ export function AdminOrdersPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {orders.map((order: {
-            id: string;
-            status: string;
-            user?: { name?: string; email?: string };
-            accounts?: { id: string; code: string; title: string; price: string | number; game?: { name: string } }[];
-            createdAt: string;
-            totalAmount: string | number;
-            paymentMethod?: string;
-            paymentProof?: string;
-            note?: string;
-          }) => {
+          {orders.map((order) => {
             const status = statusMap[order.status] || { label: order.status, variant: 'secondary' as const };
             const expanded = expandedId === order.id;
 

@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
-import { loginSchema, type LoginInput } from '@shop-ban-nick/shared-schemas';
+import { z } from 'zod';
 import { LogIn } from 'lucide-react';
 import {
   Button,
@@ -21,6 +21,12 @@ import {
 } from '@shop-ban-nick/shared-web';
 import { useAppStore, useBreadcrumb, api } from '@shop-ban-nick/shared-web';
 
+const loginSchema = z.object({
+  email: z.string().min(1, 'Email là bắt buộc').email('Email không hợp lệ'),
+  password: z.string().min(6, 'Mật khẩu tối thiểu 6 ký tự'),
+});
+type LoginFormValues = z.infer<typeof loginSchema>;
+
 export function LoginPage() {
   const router = useRouter();
   const { setAuth } = useAppStore();
@@ -31,20 +37,20 @@ export function LoginPage() {
     return () => setBreadcrumb([]);
   }, [setBreadcrumb]);
 
-  const form = useForm<LoginInput>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
 
   const loginMutation = useMutation({
-    mutationFn: (data: LoginInput) => api.login(data),
+    mutationFn: (data: LoginFormValues) => api.login(data),
     onSuccess: (res) => {
       setAuth(res.user, res.accessToken);
       router.push('/');
     },
   });
 
-  const onSubmit = (data: LoginInput) => loginMutation.mutate(data);
+  const onSubmit = (data: LoginFormValues) => loginMutation.mutate(data);
 
   return (
     <div className="container-narrow py-12 sm:py-16 flex flex-col items-center">

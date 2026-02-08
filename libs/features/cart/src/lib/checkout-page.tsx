@@ -6,8 +6,15 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createOrderSchema, type CreateOrderInput } from '@shop-ban-nick/shared-schemas';
+import { z } from 'zod';
 import { Wallet, ArrowLeft, LogIn, Gamepad2, PlusCircle, AlertCircle } from 'lucide-react';
+
+const createOrderSchema = z.object({
+  accountIds: z.array(z.string()).min(1, 'Phải chọn ít nhất 1 acc'),
+  paymentMethod: z.enum(['WALLET']),
+  note: z.string().optional(),
+});
+type CreateOrderFormValues = z.infer<typeof createOrderSchema>;
 import { Button, Card, CardContent, CardHeader, CardTitle, CardDescription, Separator, Form, FormInput, FormSubmitError, Input, Label } from '@shop-ban-nick/shared-web';
 import { useAppStore, useCart, useBreadcrumb, api, queryKeys } from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
@@ -44,7 +51,7 @@ export function CheckoutPage() {
   const insufficient = balance < total;
   const shortfall = insufficient ? total - balance : 0;
 
-  const form = useForm<CreateOrderInput>({
+  const form = useForm<CreateOrderFormValues>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
       accountIds: cart.flatMap((i) => Array(i.quantity ?? 1).fill(i.id)),
@@ -54,7 +61,7 @@ export function CheckoutPage() {
   });
 
   const orderMutation = useMutation({
-    mutationFn: (data: CreateOrderInput) => api.createOrder({ ...data, note: data.note || undefined }),
+    mutationFn: (data: CreateOrderFormValues) => api.createOrder({ ...data, note: data.note || undefined }),
     onSuccess: (order) => {
       clearCart();
       router.push(`/orders/${order.id}`);
@@ -103,7 +110,7 @@ export function CheckoutPage() {
   const orderError = orderMutation.error as ApiError & { body?: { code?: string } };
   const showInsufficientUI = insufficient || orderError?.body?.code === 'INSUFFICIENT_BALANCE';
 
-  const onSubmit = (data: CreateOrderInput) => {
+  const onSubmit = (data: CreateOrderFormValues) => {
     orderMutation.mutate({
       ...data,
       accountIds: cart.flatMap((i) => Array(i.quantity ?? 1).fill(i.id)),

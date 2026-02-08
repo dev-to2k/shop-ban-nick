@@ -55,7 +55,7 @@ export function AdminGamesPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {games.map((game: { id: string; name: string; slug: string; thumbnail?: string; isActive?: boolean; _count?: { accounts?: number }; attributes?: unknown[] }) => (
+          {games.map((game) => (
             <Card key={game.id}>
               <CardContent className="p-4 flex items-center justify-between">
                 <div className="flex items-center gap-4">

@@ -19,13 +19,13 @@ const attributeTypeOptions = [
 ];
 
 const gameEditFormSchema = z.object({
-  name: z.string().min(1),
-  slug: z.string().min(1),
+  name: z.string().min(1, 'Tên game là bắt buộc'),
+  slug: z.string().min(1, 'Slug là bắt buộc'),
   thumbnail: z.string().optional(),
   description: z.string().optional(),
   isActive: z.boolean().optional(),
   attributes: z.array(z.object({
-    name: z.string(),
+    name: z.string().min(1, 'Tên thuộc tính là bắt buộc'),
     type: z.enum(['TEXT', 'NUMBER', 'SELECT']),
     options: z.string().optional(),
   })).optional(),
@@ -69,10 +69,10 @@ export function AdminGameEditPage({ gameId }: { gameId: string }) {
         thumbnail: game.thumbnail || '',
         description: game.description || '',
         isActive: game.isActive,
-        attributes: game.attributes?.map((a: { name: string; type: string; options?: string[] }) => ({
+        attributes: game.attributes?.map((a) => ({
           name: a.name,
           type: a.type as 'TEXT' | 'NUMBER' | 'SELECT',
-          options: a.type === 'SELECT' && a.options ? a.options.join(', ') : '',
+          options: a.type === 'SELECT' && (a.options?.length ?? 0) > 0 ? (a.options ?? []).join(', ') : '',
         })) || [],
       });
     }

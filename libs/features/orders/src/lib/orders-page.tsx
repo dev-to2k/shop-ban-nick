@@ -99,7 +99,7 @@ export function OrdersPage() {
         </Card>
       ) : (
         <div ref={ordersListRef} data-auto-animate className="space-y-3">
-          {orders.map((order: { id: string; status: string; accounts?: unknown[]; createdAt: string; totalAmount: string | number }) => {
+          {orders.map((order) => {
             const status = statusMap[order.status] || { label: order.status, variant: 'secondary' as const };
             return (
               <Link key={order.id} href={`/orders/${order.id}`}>

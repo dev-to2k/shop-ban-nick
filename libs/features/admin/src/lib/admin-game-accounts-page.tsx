@@ -6,10 +6,37 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createAccountSchema, type CreateAccountInput } from '@shop-ban-nick/shared-schemas';
-import { Button, Card, CardContent, CardHeader, CardTitle, Badge, Skeleton, Form, FormInput } from '@shop-ban-nick/shared-web';
-import { AdminAccountsProvider, api, queryKeys, useAdminAccountsContext, useBreadcrumb, useAdminGame, useAdminAccounts } from '@shop-ban-nick/shared-web';
+import { z } from 'zod';
+import {
+  AdminAccountsProvider,
+  api,
+  queryKeys,
+  useAdminAccountsContext,
+  useBreadcrumb,
+  useAdminGame,
+  useAdminAccounts,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  Badge,
+  Skeleton,
+  Form,
+  FormInput,
+} from '@shop-ban-nick/shared-web';
 import { formatPrice } from '@shop-ban-nick/shared-utils';
+
+const createAccountFormSchema = z.object({
+  gameId: z.string(),
+  code: z.string().min(1, 'Mã acc là bắt buộc'),
+  title: z.string().min(1, 'Tiêu đề là bắt buộc'),
+  description: z.string().optional(),
+  price: z.number().min(0, 'Giá phải >= 0'),
+  loginInfo: z.string().optional(),
+  attributes: z.record(z.string(), z.string()).optional(),
+});
+type CreateAccountFormValues = z.infer<typeof createAccountFormSchema>;
 
 const statusColors: Record<string, 'success' | 'default' | 'warning' | 'secondary'> = {
   AVAILABLE: 'success', SOLD: 'default', RESERVED: 'warning', HIDDEN: 'secondary',
@@ -26,13 +53,13 @@ function AdminGameAccountsContent() {
   const accounts = accountsData?.data ?? [];
   const meta = accountsData?.meta ?? null;
 
-  const form = useForm<CreateAccountInput>({
-    resolver: zodResolver(createAccountSchema),
+  const form = useForm<CreateAccountFormValues>({
+    resolver: zodResolver(createAccountFormSchema),
     defaultValues: { code: '', gameId, title: '', description: '', price: 0, loginInfo: '', attributes: {} },
   });
 
   const createMutation = useMutation({
-    mutationFn: (data: CreateAccountInput) => api.admin.createAccount(data),
+    mutationFn: (data: CreateAccountFormValues) => api.admin.createAccount(data),
     onSuccess: () => {
       form.reset({ code: '', gameId, title: '', description: '', price: 0, loginInfo: '', attributes: {} });
       setShowForm(false);
@@ -105,7 +132,7 @@ function AdminGameAccountsContent() {
       ) : (
         <>
           <div className="space-y-2">
-            {accounts.map((acc: { id: string; code: string; status: string; title: string; price: string | number }) => (
+            {accounts.map((acc) => (
               <Card key={acc.id}>
                 <CardContent className="p-3 flex items-center justify-between">
                   <div className="flex-1 min-w-0">

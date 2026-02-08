@@ -20,12 +20,12 @@ const attributeTypeOptions = [
 ];
 
 const gameNewFormSchema = z.object({
-  name: z.string().min(1),
-  slug: z.string().min(1),
+  name: z.string().min(1, 'Tên game là bắt buộc'),
+  slug: z.string().min(1, 'Slug là bắt buộc'),
   thumbnail: z.string().optional(),
   description: z.string().optional(),
   attributes: z.array(z.object({
-    name: z.string(),
+    name: z.string().min(1, 'Tên thuộc tính là bắt buộc'),
     type: z.enum(['TEXT', 'NUMBER', 'SELECT']),
     options: z.string().optional(),
   })).optional(),

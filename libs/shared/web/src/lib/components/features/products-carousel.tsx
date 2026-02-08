@@ -181,7 +181,7 @@ function ProductsCarouselMulti(props: ProductsCarouselMulti) {
     staleTime: 60_000,
   });
 
-  const slugs = useMemo(() => games.slice(0, maxGames).map((g: { slug: string }) => g.slug), [games, maxGames]);
+  const slugs = useMemo(() => games.slice(0, maxGames).map((g) => g.slug), [games, maxGames]);
 
   const accountQueries = useQueries({
     queries: slugs.map((slug) => ({

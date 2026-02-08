@@ -7,13 +7,6 @@ export const paginationMetaSchema = z.object({
   totalPages: z.number(),
 });
 
-export function paginatedResponseSchema<T extends z.ZodTypeAny>(itemSchema: T) {
-  return z.object({
-    data: z.array(itemSchema),
-    meta: paginationMetaSchema,
-  });
-}
-
 export const authResponseSchema = z.object({
   accessToken: z.string(),
   user: z.object({

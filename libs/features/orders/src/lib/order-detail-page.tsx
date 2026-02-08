@@ -52,7 +52,7 @@ export function OrderDetailPage({ id }: { id: string }) {
         <CardContent className="space-y-4">
           <div>
             <h3 className="font-semibold text-sm mb-2">Acc đã mua</h3>
-            {accounts.map((acc: { id: string; title: string; code: string; price: string | number; game?: { name: string }; loginInfo?: string }) => (
+            {accounts.map((acc) => (
               <div key={acc.id} className="flex items-center justify-between py-2 border-b last:border-0">
                 <div>
                   <p className="text-sm font-medium">{acc.title}</p>
@@ -67,7 +67,7 @@ export function OrderDetailPage({ id }: { id: string }) {
             <span>Tổng cộng</span>
             <span className="text-primary tabular-nums">{formatPrice(Number(order.totalAmount))}</span>
           </div>
-          {order.status === 'COMPLETED' && accounts.some((a: { loginInfo?: string }) => a.loginInfo) && (
+          {order.status === 'COMPLETED' && accounts.some((a) => !!a.loginInfo) && (
             <>
               <Separator />
               <div>
@@ -75,7 +75,7 @@ export function OrderDetailPage({ id }: { id: string }) {
                   <CheckCircle className="h-5 w-5 text-green-500" />
                   <h3 className="font-semibold">Thông tin đăng nhập</h3>
                 </div>
-                {accounts.filter((a: { loginInfo?: string }) => a.loginInfo).map((acc: { id: string; title: string; code: string; loginInfo?: string }) => (
+                {accounts.filter((a) => !!a.loginInfo).map((acc) => (
                   <div key={acc.id} className="bg-muted p-3 rounded-md mb-2">
                     <p className="text-sm font-medium mb-1">{acc.title} ({acc.code})</p>
                     <p className="text-sm font-mono bg-background p-2 rounded-md">{acc.loginInfo}</p>
