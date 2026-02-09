@@ -10,6 +10,7 @@ export * from './form';
 export * from './input';
 export * from './label';
 export * from './lazy-image';
+export * from './reveal';
 export * from './select';
 export * from './separator';
 export * from './skeleton';

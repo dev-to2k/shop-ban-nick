@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
-import { LazyImage } from './lazy-image';
+import { useState } from 'react';
 import { cn } from '../../utils';
+import { LazyImage } from './lazy-image';
 
-const DEFAULT_SIZES = '(max-width: 30em) 50vw, (max-width: 48em) 33vw, (max-width: 62em) 25vw, 20vw';
+const DEFAULT_SIZES =
+  '(max-width: 30em) 50vw, (max-width: 48em) 33vw, (max-width: 62em) 25vw, 20vw';
 
 export interface CardImageProps {
   src: string;
@@ -20,6 +21,7 @@ export interface CardImageProps {
   unoptimized?: boolean;
   fallback?: React.ReactNode;
   onError?: () => void;
+  children?: React.ReactNode;
 }
 
 export function CardImage({
@@ -33,6 +35,7 @@ export function CardImage({
   unoptimized = false,
   fallback = null,
   onError,
+  children,
 }: CardImageProps) {
   const [error, setError] = useState(false);
   const handleError = () => {
@@ -55,13 +58,19 @@ export function CardImage({
   const innerCls = 'absolute inset-0 w-full h-full min-w-0 min-h-0 relative';
 
   if (!src || error) {
-    return <div className={wrapperCls}>{fallback}</div>;
+    return (
+      <div className={wrapperCls}>
+        {fallback}
+        {children}
+      </div>
+    );
   }
 
   if (lazy && !priority) {
     return (
       <div className={wrapperCls}>
         <LazyImage {...imageProps} placeholderClassName={innerCls} />
+        {children}
       </div>
     );
   }
@@ -69,6 +78,7 @@ export function CardImage({
   return (
     <div className={wrapperCls}>
       <Image {...imageProps} />
+      {children}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 export * from './banner-slider';
 export * from './carousel-nav-button';
 export * from './featured-products-carousel';
+export * from './flash-sale';
 export * from './games-list';
 export * from './games-mall';
 export * from './global-mutation-loading';
@@ -8,3 +9,4 @@ export * from './home-faq';
 export * from './home-hero';
 export * from './products-carousel';
 export * from './purchase-marquee';
+export * from './trust-badges';

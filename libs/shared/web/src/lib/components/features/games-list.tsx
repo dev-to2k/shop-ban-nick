@@ -1,25 +1,52 @@
 'use client';
 
-import { Button } from '../ui/button';
-import { Card, CardContent, CardTitle, CardDescription } from '../ui/card';
-import { Skeleton } from '../ui/skeleton';
-import { api, getAssetUrl, queryKeys } from '../../api';
-import { AUTO_ANIMATE_CONFIG } from '../../config';
 import { useAutoAnimate } from '@formkit/auto-animate/react';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowRight, Gamepad2 } from 'lucide-react';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { api, getAssetUrl, queryKeys } from '../../api';
+import { AUTO_ANIMATE_CONFIG } from '../../config';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardDescription, CardTitle } from '../ui/card';
 import { CardImage } from '../ui/card-image';
+import { Skeleton } from '../ui/skeleton';
+
+import { Badge } from '../ui/badge';
+
+function getRibbon(game: { slug: string; _count?: { accounts: number } }) {
+  const slug = game.slug;
+  const count = game._count?.accounts ?? 0;
+
+  if (['lien-quan-mobile', 'free-fire'].includes(slug))
+    return { text: 'Best Seller', variant: 'warning' as const };
+  if (['genshin-impact', 'pubg-mobile'].includes(slug))
+    return { text: 'Hot', variant: 'destructive' as const };
+  if (['roblox', 'bloxfruits'].includes(slug))
+    return { text: 'Mới', variant: 'success' as const };
+  if (count > 50) return { text: 'Phổ biến', variant: 'default' as const };
+  return null;
+}
 
 function GameThumb({
   name,
   src,
   compact,
+  ribbon,
 }: {
   name: string;
   src?: string | null;
   compact?: boolean;
+  ribbon?: {
+    text: string;
+    variant:
+      | 'default'
+      | 'secondary'
+      | 'destructive'
+      | 'outline'
+      | 'success'
+      | 'warning';
+  } | null;
 }) {
   return (
     <CardImage
@@ -27,11 +54,26 @@ function GameThumb({
       alt={`${name} - thumbnail`}
       wrapperClassName={`relative w-full aspect-4/3 overflow-hidden bg-card rounded-t-xl shrink-0 flex items-center justify-center ${compact ? 'min-h-28' : 'min-h-40'}`}
       imageClassName="object-cover object-center group-hover:scale-105 transition-transform"
-      sizes={compact ? '(max-width: 30em) 50vw, (max-width: 48em) 33vw, 25vw' : '(max-width: 30em) 50vw, (max-width: 48em) 25vw, (max-width: 62em) 20vw, 20vw'}
+      sizes={
+        compact
+          ? '(max-width: 30em) 50vw, (max-width: 48em) 33vw, 25vw'
+          : '(max-width: 30em) 50vw, (max-width: 48em) 25vw, (max-width: 62em) 20vw, 20vw'
+      }
       lazy={false}
       unoptimized
-      fallback={<Gamepad2 className="h-12 w-12 text-muted-foreground shrink-0" />}
-    />
+      fallback={
+        <Gamepad2 className="h-12 w-12 text-muted-foreground shrink-0" />
+      }
+    >
+      {ribbon && (
+        <Badge
+          variant={ribbon.variant}
+          className="absolute top-2 left-2 z-10 shadow-md"
+        >
+          {ribbon.text}
+        </Badge>
+      )}
+    </CardImage>
   );
 }
 
@@ -70,30 +112,30 @@ export function GamesList({
       }
     >
       {games.map((game) => (
-          <Link key={game.id} href={`/games/${game.slug}`}>
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer flex flex-col h-full group">
-              <GameThumb
-                name={game.name}
-                src={getAssetUrl(game.thumbnail)}
-                compact={isPreview}
-              />
-              <CardContent className="p-3 flex flex-col flex-1">
-                <CardTitle className="font-semibold text-sm line-clamp-1">
-                  {game.name}
-                </CardTitle>
-                <CardDescription className="text-xs mt-1 shrink-0">
-                  {game._count?.accounts ?? 0} acc có sẵn
+        <Link key={game.id} href={`/games/${game.slug}`}>
+          <Card className="hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer flex flex-col h-full group">
+            <GameThumb
+              name={game.name}
+              src={getAssetUrl(game.thumbnail)}
+              compact={isPreview}
+              ribbon={getRibbon(game)}
+            />
+            <CardContent className="p-3 flex flex-col flex-1">
+              <CardTitle className="font-semibold text-sm line-clamp-1">
+                {game.name}
+              </CardTitle>
+              <CardDescription className="text-xs mt-1 shrink-0">
+                {game._count?.accounts ?? 0} acc có sẵn
+              </CardDescription>
+              {!isPreview && (
+                <CardDescription className="text-xs mt-2 line-clamp-2 h-8">
+                  {game.description || ''}
                 </CardDescription>
-                {!isPreview && (
-                  <CardDescription className="text-xs mt-2 line-clamp-2 h-8">
-                    {game.description || ''}
-                  </CardDescription>
-                )}
-              </CardContent>
-            </Card>
-          </Link>
-        ),
-      )}
+              )}
+            </CardContent>
+          </Card>
+        </Link>
+      ))}
     </div>
   );
 

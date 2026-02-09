@@ -50,12 +50,20 @@
   --space-unit: 0.5rem;
   --container-max: min(100%, 80rem);
   @keyframes accordion-down {
-    from { height: 0; }
-    to { height: var(--radix-accordion-content-height); }
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
   }
   @keyframes accordion-up {
-    from { height: var(--radix-accordion-content-height); }
-    to { height: 0; }
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
   }
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -85,8 +93,8 @@
   --accent: oklch(0.96 0.03 25);
   --accent-foreground: oklch(0.25 0.08 25);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.90 0 0);
-  --input: oklch(0.90 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
   --ring: oklch(0.55 0.22 25);
   --chart-1: oklch(0.55 0.22 25);
   --chart-2: oklch(0.6 0.15 180);
@@ -99,7 +107,7 @@
   --sidebar-primary-foreground: oklch(0.98 0 0);
   --sidebar-accent: oklch(0.96 0.03 25);
   --sidebar-accent-foreground: oklch(0.25 0.08 25);
-  --sidebar-border: oklch(0.90 0.03 25);
+  --sidebar-border: oklch(0.9 0.03 25);
   --sidebar-ring: oklch(0.55 0.22 25);
   --header-bg: oklch(1 0 0);
   --header-border: oklch(0.55 0.22 25);
@@ -111,44 +119,69 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  /* Deep Void Background - Trending 2026 (Dark with subtle blue/purple undertone) */
+  --background: oklch(0.12 0.01 240);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+
+  /* Glassy Cards - Slightly lighter than bg, blue tinted */
+  --card: oklch(0.15 0.02 245 / 0.7);
   --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
+
+  --popover: oklch(0.15 0.02 245);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.60 0.25 25);
+
+  /* Electric Red - More vibrant/neon than before */
+  --primary: oklch(0.65 0.25 25);
   --primary-foreground: oklch(0.98 0 0);
-  --secondary: oklch(0.269 0 0);
+
+  /* Deep Secondary */
+  --secondary: oklch(0.18 0.03 245);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0.02 25);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.28 0.04 25);
+
+  /* Muted elements */
+  --muted: oklch(0.18 0.02 245);
+  --muted-foreground: oklch(0.7 0.02 245);
+
+  /* Accent - Neon Blue/Cyan hint */
+  --accent: oklch(0.2 0.05 245);
   --accent-foreground: oklch(0.98 0 0);
+
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.32 0 0);
-  --input: oklch(0.32 0 0);
-  --ring: oklch(0.60 0.25 25);
-  --chart-1: oklch(0.60 0.25 25);
-  --chart-2: oklch(0.65 0.15 180);
-  --chart-3: oklch(0.68 0.12 50);
-  --chart-4: oklch(0.62 0.16 280);
-  --chart-5: oklch(0.58 0.2 340);
-  --sidebar: oklch(0.205 0 0);
+
+  /* Subtle Border */
+  --border: oklch(0.25 0.04 245);
+  --input: oklch(0.25 0.04 245);
+
+  --ring: oklch(0.65 0.25 25);
+
+  /* Charts - Vibrant data viz */
+  --chart-1: oklch(0.65 0.25 25);
+  --chart-2: oklch(0.65 0.18 190);
+  --chart-3: oklch(0.7 0.15 320);
+  --chart-4: oklch(0.62 0.18 280);
+  --chart-5: oklch(0.6 0.2 340);
+
+  /* Sidebar - Matches bg or card */
+  --sidebar: oklch(0.12 0.01 240);
   --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.60 0.25 25);
+  --sidebar-primary: oklch(0.65 0.25 25);
   --sidebar-primary-foreground: oklch(0.98 0 0);
-  --sidebar-accent: oklch(0.28 0.04 25);
+  --sidebar-accent: oklch(0.18 0.03 245);
   --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.32 0 0);
-  --sidebar-ring: oklch(0.60 0.25 25);
-  --header-bg: var(--background);
-  --header-border: oklch(0.60 0.25 25);
+  --sidebar-border: oklch(0.25 0.04 245);
+  --sidebar-ring: oklch(0.65 0.25 25);
+
+  --header-bg: oklch(0.12 0.01 240 / 0.8);
+  --header-border: oklch(0.25 0.04 245);
   --header-foreground: var(--foreground);
-  --section-alt-bg: oklch(0.22 0.02 250 / 0.2);
+  --section-alt-bg: oklch(0.15 0.02 245 / 0.3);
+
   --scrollbar-track: transparent;
   --scrollbar-thumb: oklch(0.55 0.02 25 / 0.35);
-  --scrollbar-thumb-hover: oklch(0.65 0.14 25 / 0.6);
+  --scrollbar-thumb-hover: oklch(0.65 0.25 25 / 0.6);
+
+  /* Ambient Glow - Red tint */
+  --glow: oklch(0.65 0.25 25 / 0.15);
 }
 
 /* ═══════════════════════════════════════════════════
@@ -188,10 +221,16 @@
     padding-right: 1rem;
   }
   @media (min-width: 30em) {
-    .container-narrow { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .container-narrow {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
   }
   @media (min-width: 48em) {
-    .container-narrow { padding-left: 2rem; padding-right: 2rem; }
+    .container-narrow {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 }
 
@@ -236,12 +275,24 @@ body::-webkit-scrollbar-corner,
 }
 
 /* Glow effects — only visible when theme sets --glow to non-transparent */
-.glow-sm { box-shadow: 0 0 8px var(--glow, transparent); }
-.glow-md { box-shadow: 0 0 16px var(--glow, transparent); }
-.glow-lg { box-shadow: 0 0 24px var(--glow, transparent); }
-.glow-text { text-shadow: 0 0 12px var(--glow, transparent); }
-.hover\:glow-sm:hover { box-shadow: 0 0 10px var(--glow, transparent); }
-.hover\:glow-md:hover { box-shadow: 0 0 20px var(--glow, transparent); }
+.glow-sm {
+  box-shadow: 0 0 8px var(--glow, transparent);
+}
+.glow-md {
+  box-shadow: 0 0 16px var(--glow, transparent);
+}
+.glow-lg {
+  box-shadow: 0 0 24px var(--glow, transparent);
+}
+.glow-text {
+  text-shadow: 0 0 12px var(--glow, transparent);
+}
+.hover\:glow-sm:hover {
+  box-shadow: 0 0 10px var(--glow, transparent);
+}
+.hover\:glow-md:hover {
+  box-shadow: 0 0 20px var(--glow, transparent);
+}
 
 /* @formkit/auto-animate: GPU layer for direct children to avoid layout thrash */
 [data-auto-animate] > * {
@@ -251,12 +302,20 @@ body::-webkit-scrollbar-corner,
 
 /* Bottom sheet mobile: slide in from bottom, slide out to bottom */
 @keyframes sheet-in {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 @keyframes sheet-out {
-  from { transform: translateY(0); }
-  to { transform: translateY(100%); }
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
 }
 .alert-dialog-sheet-in {
   animation: sheet-in 0.22s ease-out;

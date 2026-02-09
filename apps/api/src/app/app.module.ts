@@ -1,14 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { PrismaModule } from '@shop-ban-nick/nest-prisma';
-import { AuthModule } from '@shop-ban-nick/feature-auth/api';
-import { GameModule } from '@shop-ban-nick/feature-game/api';
 import { AccountModule } from '@shop-ban-nick/feature-account/api';
-import { OrderModule } from '@shop-ban-nick/feature-order/api';
-import { WalletModule } from '@shop-ban-nick/feature-wallet/api';
+import { AuthModule } from '@shop-ban-nick/feature-auth/api';
 import { BannerModule } from '@shop-ban-nick/feature-banner/api';
+import { GameModule } from '@shop-ban-nick/feature-game/api';
+import { OrderModule } from '@shop-ban-nick/feature-order/api';
 import { UploadModule } from '@shop-ban-nick/feature-upload/api';
+import { WalletModule } from '@shop-ban-nick/feature-wallet/api';
+import { PrismaModule } from '@shop-ban-nick/nest-prisma';
+
+import { BlogModule } from './blog/blog.module';
 
 @Module({
   imports: [
@@ -22,6 +24,7 @@ import { UploadModule } from '@shop-ban-nick/feature-upload/api';
     UploadModule,
     WalletModule,
     BannerModule,
+    BlogModule,
   ],
 })
 export class AppModule {}

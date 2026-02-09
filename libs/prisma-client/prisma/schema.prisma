@@ -59,35 +59,35 @@ enum DepositRequestStatus {
 }
 
 model User {
-  id              String           @id @default(uuid())
-  email           String           @unique
-  phone           String?          @unique
-  password        String
-  name            String
-  avatar          String?
-  role            Role             @default(CUSTOMER)
-  walletBalance   Decimal          @default(0)
-  orders          Order[]
+  id                 String              @id @default(uuid())
+  email              String              @unique
+  phone              String?             @unique
+  password           String
+  name               String
+  avatar             String?
+  role               Role                @default(CUSTOMER)
+  walletBalance      Decimal             @default(0)
+  orders             Order[]
   walletTransactions WalletTransaction[]
-  depositRequests DepositRequest[]
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  depositRequests    DepositRequest[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
 
   @@map("users")
 }
 
 model DepositRequest {
-  id               String                @id @default(uuid())
-  userId           String
-  user             User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount           Decimal
-  provider         PaymentProvider
-  status           DepositRequestStatus  @default(PENDING)
-  externalId       String?
-  paymentUrl       String?
-  metadata         Json?
-  createdAt        DateTime              @default(now())
-  completedAt      DateTime?
+  id                String               @id @default(uuid())
+  userId            String
+  user              User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount            Decimal
+  provider          PaymentProvider
+  status            DepositRequestStatus @default(PENDING)
+  externalId        String?
+  paymentUrl        String?
+  metadata          Json?
+  createdAt         DateTime             @default(now())
+  completedAt       DateTime?
   walletTransaction WalletTransaction?
 
   @@index([userId])
@@ -177,4 +177,20 @@ model Order {
   @@index([userId])
   @@index([status])
   @@map("orders")
+}
+
+model Blog {
+  id        String   @id @default(uuid())
+  title     String
+  slug      String   @unique
+  excerpt   String?
+  content   String
+  thumbnail String?
+  author    String?
+  views     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("blogs")
 }
