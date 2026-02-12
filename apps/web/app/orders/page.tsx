@@ -1,4 +1,4 @@
-import { OrdersPage } from '@shop-ban-nick/feature-order';
+import { OrdersPage } from '@features/order/orders-page';
 
 export default function Page() {
   return <OrdersPage />;

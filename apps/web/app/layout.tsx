@@ -17,7 +17,7 @@ import {
   Footer,
   ScrollToTop,
   ZaloFloat,
-} from '@shop-ban-nick/shared-web';
+} from '@shared';
 
 export const metadata: Metadata = {
   title: 'ShopAcc - Mua bán acc game uy tín',

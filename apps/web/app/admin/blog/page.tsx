@@ -1,4 +1,4 @@
-import { AdminBlogTable } from '@shop-ban-nick/feature-blog';
+import { AdminBlogTable } from '@features/blog/admin-blog-table';
 
 export default function AdminBlogPage() {
   return (

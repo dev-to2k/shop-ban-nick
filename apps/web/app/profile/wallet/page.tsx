@@ -1,4 +1,4 @@
-import { ProfileWalletPage } from '@shop-ban-nick/feature-wallet';
+import { ProfileWalletPage } from '@features/wallet/profile-wallet-page';
 
 export default function Page() {
   return <ProfileWalletPage />;

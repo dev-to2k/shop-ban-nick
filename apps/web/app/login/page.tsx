@@ -1,4 +1,4 @@
-import { LoginPage } from '@shop-ban-nick/feature-auth';
+import { LoginPage } from '@features/auth/login-page';
 
 export default function Page() {
   return <LoginPage />;

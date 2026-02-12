@@ -8,9 +8,14 @@ export class BlogService {
   constructor(private prisma: PrismaService) {}
 
   create(createBlogDto: CreateBlogDto) {
-    // Auto-generate slug if not provided, for now assume provided
+    const slug =
+      createBlogDto.slug ??
+      createBlogDto.title
+        .toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
     return this.prisma.blog.create({
-      data: createBlogDto,
+      data: { ...createBlogDto, slug },
     });
   }
 

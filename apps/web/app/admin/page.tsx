@@ -1,4 +1,4 @@
-import { AdminDashboardPage } from '@shop-ban-nick/feature-admin';
+import { AdminDashboardPage } from '@features/admin/admin-dashboard-page';
 
 export default function Page() {
   return <AdminDashboardPage />;

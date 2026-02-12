@@ -1,7 +1,8 @@
 'use client';
 
-import { AdminBlogForm, blogApi } from '@shop-ban-nick/feature-blog';
-import { Button } from '@shop-ban-nick/shared-web';
+import { AdminBlogForm } from '@features/blog/admin-blog-form';
+import { blogApi } from '@features/blog/blog-api';
+import { Button } from '@shared/components';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';

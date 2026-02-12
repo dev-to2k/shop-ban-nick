@@ -1,4 +1,4 @@
-import { AdminOrdersPage } from '@shop-ban-nick/feature-admin';
+import { AdminOrdersPage } from '@features/admin/admin-orders-page';
 
 export default function Page() {
   return <AdminOrdersPage />;

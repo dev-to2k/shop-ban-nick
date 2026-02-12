@@ -1,1 +1,1 @@
-{"name":"upload","$schema":"../../../node_modules/nx/schemas/project-schema.json","sourceRoot":"libs/features/upload/src","projectType":"library","tags":[]}
+{"name":"upload","$schema":"../../../node_modules/nx/schemas/project-schema.json","sourceRoot":"libs/features/upload/src","projectType":"library","tags":["scope:feature"]}

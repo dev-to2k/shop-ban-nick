@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { readFileSync } from 'fs';
-import { join } from 'path';
+import { PrismaService } from '@shop-ban-nick/nest-prisma';
 
 export interface BannerItem {
   image: string;
@@ -13,18 +12,20 @@ export interface BannerItem {
 
 @Injectable()
 export class BannerService {
-  findAll(): BannerItem[] {
-    const base = process.env.ASSETS_PATH || join(process.cwd(), 'apps', 'api', 'assets');
-    const configPath = join(base, 'banners', 'config.json');
-    try {
-      const raw = readFileSync(configPath, 'utf-8');
-      const items = JSON.parse(raw) as BannerItem[];
-      return items.map((item) => ({
-        ...item,
-        image: item.image.startsWith('/') ? item.image : `/assets/banners/${item.image}`,
-      }));
-    } catch {
-      return [];
-    }
+  constructor(private prisma: PrismaService) {}
+
+  async findAll(): Promise<BannerItem[]> {
+    const rows = await this.prisma.banner.findMany({
+      where: { isActive: true },
+      orderBy: { sortOrder: 'asc' },
+    });
+    return rows.map((row) => ({
+      image: row.image.startsWith('/') ? row.image : `/assets/banners/${row.image}`,
+      title: row.title,
+      subtitle: row.subtitle,
+      href: row.href,
+      gradient: row.gradient,
+      promo: row.promo,
+    }));
   }
 }

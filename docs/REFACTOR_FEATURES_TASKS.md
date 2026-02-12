@@ -21,6 +21,40 @@
 
 ---
 
+## Cấu trúc UI trong feature web
+
+Mỗi feature có web nên có cấu trúc thư mục chuẩn trong `src/web/` (template: **auth**):
+
+| Thư mục | Mục đích | Ví dụ auth |
+|--------|----------|------------|
+| `components/` | UI components (dumb/smart) | LoginForm, RegisterForm |
+| `context/` | (Optional) Provider + hook đọc context | AuthContext nếu cần state riêng |
+| `hooks/` | Logic + gọi API (mutation/query) | useLogin, useRegister |
+| `services/` | Pure API calls | authService.login(), getProfile() |
+| `types/` | (Optional) Types chỉ dùng trong feature | LoginFormValues |
+| `utils/` | (Optional) Helpers feature-specific | validateEmail |
+| `schemas/` | (Optional) Zod/validation schemas | loginSchema, registerSchema |
+| `index.ts` | Barrel: export pages, components, hooks, services, types | |
+
+- **Auth** đã triển khai đầy đủ: `components/`, `hooks/`, `services/`, `types/`, `schemas/`, pages compose hooks + components.
+- Các feature khác (cart, order, account, game, wallet, profile, admin) đã có sẵn thư mục `components/`, `hooks/`, `services/` với barrel; có thể bổ sung nội dung theo nhu cầu.
+
+---
+
+## NX tags và dependency constraints
+
+| Tag | Dùng cho | Chỉ được depend on |
+|-----|----------|---------------------|
+| `scope:app` | apps/web, apps/api | `scope:feature`, `scope:shared` |
+| `scope:feature` | libs/features/* | `scope:shared` |
+| `scope:shared` | libs/shared/*, libs/nest-prisma, libs/prisma-client | `scope:shared` |
+| `type:app-web` / `type:app-api` | Phân biệt app (optional) | — |
+| `type:ui` / `type:util` / `type:api` | Phân biệt shared (optional) | — |
+
+Cấu hình trong `eslint.config.mjs` → rule `@nx/enforce-module-boundaries` → `depConstraints`. Mỗi project có `tags` trong `project.json`.
+
+---
+
 ## Feature 1: Auth
 
 **Nguồn hiện tại:** `libs/api-auth/` + `libs/features/auth/`.

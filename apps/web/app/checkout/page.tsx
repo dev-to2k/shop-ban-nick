@@ -1,4 +1,4 @@
-import { CheckoutPage } from '@shop-ban-nick/feature-order';
+import { CheckoutPage } from '@features/order/checkout-page';
 
 export default function Page() {
   return <CheckoutPage />;

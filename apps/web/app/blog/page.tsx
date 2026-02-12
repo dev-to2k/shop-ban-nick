@@ -1,4 +1,4 @@
-import { BlogList } from '@shop-ban-nick/feature-blog';
+import { BlogList } from '@features/blog/blog-list';
 
 export default function BlogPage() {
   return (

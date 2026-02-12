@@ -1,4 +1,4 @@
-import { RegisterPage } from '@shop-ban-nick/feature-auth';
+import { RegisterPage } from '@features/auth/register-page';
 
 export default function Page() {
   return <RegisterPage />;

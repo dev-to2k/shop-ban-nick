@@ -65,8 +65,62 @@
       height: 0;
     }
   }
+  @keyframes loading-dot {
+    0%, 80%, 100% {
+      opacity: 0.3;
+    }
+    40% {
+      opacity: 1;
+    }
+  }
+  @keyframes countdown-slide {
+    0% {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+  --animate-loading-dot: loading-dot 1.4s ease-in-out infinite;
+  --animate-countdown-slide: countdown-slide 0.25s ease-out;
+  /* Countdown slot: vertical list, translateY per digit (reference jaggy style) */
+  --countdown-slot-duration: 0.35s;
+  --countdown-slot-ease: cubic-bezier(0.99, 0.025, 0.97, -0.12);
+  @keyframes banner-text-in {
+    0% {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  --animate-banner-text-in: banner-text-in 0.5s ease-out forwards;
+  @keyframes banner-bg-zoom {
+    0% {
+      transform: scale(1);
+    }
+    100% {
+      transform: scale(1.08);
+    }
+  }
+  --animate-banner-bg-zoom: banner-bg-zoom 18s ease-out forwards;
+  @keyframes hero-glow-pulse {
+    0%, 100% {
+      opacity: 0.4;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.7;
+      transform: scale(1.15);
+    }
+  }
+  --animate-hero-glow-pulse: hero-glow-pulse 4s ease-in-out infinite;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -74,6 +128,8 @@
    ═══════════════════════════════════════════════════ */
 
 :root {
+  --countdown-slot-duration: 0.35s;
+  --countdown-slot-ease: cubic-bezier(0.99, 0.025, 0.97, -0.12);
   --font-size-base: 16px;
   --control-height: 2.25rem;
   --radius: 0.625rem;

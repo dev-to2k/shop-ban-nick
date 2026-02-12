@@ -1,5 +1,5 @@
-import { AdminBlogForm } from '@shop-ban-nick/feature-blog';
-import { Button } from '@shop-ban-nick/shared-web';
+import { AdminBlogForm } from '@features/blog/admin-blog-form';
+import { Button } from '@shared/components';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 

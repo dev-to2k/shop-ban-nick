@@ -1,4 +1,4 @@
-import { BlogDetail } from '@shop-ban-nick/feature-blog';
+import { BlogDetail } from '@features/blog/blog-detail';
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
   return (

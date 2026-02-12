@@ -1,6 +1,7 @@
 'use client';
 
-import { Button } from '@shop-ban-nick/shared-web';
+import { RefreshCw } from 'lucide-react';
+import { Button } from '@shared/components';
 import { useEffect } from 'react';
 
 export default function Error({
@@ -26,6 +27,7 @@ export default function Error({
           onClick={() => reset()}
           className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
         >
+          <RefreshCw className="h-4 w-4" />
           Thử lại
         </Button>
       </div>

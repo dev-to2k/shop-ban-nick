@@ -15,4 +15,5 @@ export * from './select';
 export * from './separator';
 export * from './skeleton';
 export * from './spinner';
+export * from './table';
 export * from './textarea';

@@ -1,1 +1,1 @@
-{"name":"game","$schema":"../../../node_modules/nx/schemas/project-schema.json","sourceRoot":"libs/features/game/src","projectType":"library","tags":[]}
+{"name":"game","$schema":"../../../node_modules/nx/schemas/project-schema.json","sourceRoot":"libs/features/game/src","projectType":"library","tags":["scope:feature"]}

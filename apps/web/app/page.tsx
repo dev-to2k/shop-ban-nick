@@ -1,5 +1,7 @@
+import { HeroSection, TrustBadgesSection } from '@features/home';
+import { BannerSection } from '@shop-ban-nick/feature-banner';
+import { GamesSection } from '@shop-ban-nick/feature-game';
 import {
-  BannerSlider,
   Button,
   Card,
   CardContent,
@@ -9,14 +11,11 @@ import {
   FeaturedProductsCarousel,
   FirstGameCarousel,
   FlashSale,
-  GamesList,
   getGamesServer,
   HomeFaq,
-  HomeHero,
   PurchaseMarquee,
   Reveal,
-  TrustBadges,
-} from '@shop-ban-nick/shared-web';
+} from '@shared';
 import {
   ArrowRight,
   CreditCard,
@@ -85,14 +84,12 @@ export default async function HomePage() {
 
   return (
     <div>
-      <section aria-label="Banner quảng báo">
-        <BannerSlider />
-      </section>
+      <BannerSection />
 
-      <HomeHero accLabel={accLabel} />
+      <HeroSection accLabel={accLabel} />
 
       <Reveal delay={100}>
-        <TrustBadges sectionVariant="slate" />
+        <TrustBadgesSection sectionVariant="slate" />
       </Reveal>
 
       <Reveal delay={200}>
@@ -107,7 +104,7 @@ export default async function HomePage() {
           <h2 id="features-heading" className="sr-only">
             Vì sao chọn chúng tôi
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
               {
                 icon: Zap,
@@ -150,7 +147,7 @@ export default async function HomePage() {
           >
             Khách hàng nói gì
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
             {[
               {
                 name: 'Minh T.',
@@ -209,7 +206,7 @@ export default async function HomePage() {
       </Reveal>
 
       <Reveal delay={200}>
-        <GamesList variant="preview" sectionVariant="white" />
+        <GamesSection variant="preview" sectionVariant="white" />
       </Reveal>
 
       <Reveal delay={200}>
@@ -253,6 +250,7 @@ export default async function HomePage() {
             <Link href="/games">
               <Button variant="outline" size="lg">
                 Bắt đầu mua ngay
+                <ArrowRight className="size-4" />
               </Button>
             </Link>
           </div>

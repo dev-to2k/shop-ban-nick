@@ -20,13 +20,15 @@ export interface BlogPost {
   slug: string;
   thumbnail?: string;
   excerpt?: string;
+  content?: string;
   author?: string;
+  isActive?: boolean;
   createdAt: string | Date;
 }
 
 export function BlogCard({ post }: { post: BlogPost }) {
   return (
-    <Card className="overflow-hidden flex flex-col h-full group hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+    <Card className="overflow-hidden flex flex-col h-full group hover:shadow-lg hover:-translate-y-1 active:scale-[0.99] transition-all duration-300 focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:outline-none">
       <div className="relative aspect-video w-full overflow-hidden bg-muted">
         {post.thumbnail ? (
           <Image

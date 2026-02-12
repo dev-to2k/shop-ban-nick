@@ -51,7 +51,7 @@ function SlideContent({ banner, index }: { banner: BannerSlide; index: number })
       <Link href={banner.href} className="block">
         <div className="relative w-full overflow-hidden aspect-[21/9]">
           {banner.image && !imgError && (
-            <div className="absolute inset-0">
+            <div className="absolute inset-0 [animation:var(--animate-banner-bg-zoom)]">
               <Image
                 src={banner.image}
                 alt={banner.title}
@@ -141,14 +141,9 @@ export function BannerSlider() {
         <div className="overflow-hidden">
           <div className="flex">
             <div className="flex-[0_0_100%] min-w-0 relative">
-              <div className="relative w-full overflow-hidden aspect-[21/9] bg-muted">
+              <div className="relative w-full overflow-hidden aspect-[21/9] bg-background">
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <ImageIcon className="h-16 w-16 text-muted-foreground/30 md:h-20 md:w-20" strokeWidth={1.25} aria-hidden />
-                </div>
-                <div className="absolute inset-0 flex flex-col justify-end p-6 md:p-8 max-w-lg gap-3">
-                  <div className="h-6 w-2/3 max-w-xs rounded-md bg-muted-foreground/20 animate-pulse" />
-                  <div className="h-4 w-full max-w-sm rounded-md bg-muted-foreground/15 animate-pulse" />
-                  <div className="h-4 w-[80%] max-w-[10rem] rounded-full bg-muted-foreground/15 animate-pulse mt-1" />
+                  <ImageIcon className="h-16 w-16 text-muted-foreground/40 md:h-20 md:w-20" strokeWidth={1.25} aria-hidden />
                 </div>
               </div>
             </div>

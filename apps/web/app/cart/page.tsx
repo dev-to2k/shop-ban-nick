@@ -1,4 +1,4 @@
-import { CartPage } from '@shop-ban-nick/feature-cart';
+import { CartPage } from '@features/cart/cart-page';
 
 export default function Page() {
   return <CartPage />;

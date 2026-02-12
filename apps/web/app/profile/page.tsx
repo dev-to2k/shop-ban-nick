@@ -1,4 +1,4 @@
-import { ProfilePage } from '@shop-ban-nick/feature-profile';
+import { ProfilePage } from '@features/profile/profile-page';
 
 export default function Page() {
   return <ProfilePage />;
